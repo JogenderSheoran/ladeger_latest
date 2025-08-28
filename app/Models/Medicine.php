@@ -1,0 +1,20 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class Medicine extends Model
+{
+    use HasFactory, SoftDeletes;
+
+    protected $table = 'medicines';
+
+    public function getMedicineNameAttribute($value)
+    {
+        return ucfirst($value); 
+    }
+}
+
