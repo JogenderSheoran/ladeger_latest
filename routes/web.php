@@ -64,6 +64,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('ledgers',[shiftController::class,'ledgers'])->name('ledgers');  
         Route::post('add_ledger',[shiftController::class,'add_ledger'])->name('add_ledger');
         Route::post('submit-ledger',[shiftController::class,'submit_ledger'])->name('submit_ledger');
+        Route::post('check-ledger-name',[shiftController::class,'check_ledger_name'])->name('check_ledger_name');
         Route::get('edit-ledger/{id}',[shiftController::class,'edit_ledger'])->name('edit_ledger');
         Route::post('update-ledger',[shiftController::class,'update_ledger'])->name('update_ledger');
         Route::post('update_ledger_thpc',[shiftController::class,'update_ledger_thpc'])->name('update_ledger_thpc');

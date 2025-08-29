@@ -294,7 +294,8 @@
                     // $("#minus").text('Dene :'+res.dene);
                     console.log(res.data);
                     $.each(res.data, function (key, ledger) {
-
+                        console.log(ledger);
+                        
                         var serial=parseFloat(key)+1;
                         last_serial=serial;
 
@@ -332,18 +333,25 @@
                         var regularAmount = '';
 
                         if (ledger['medicine_transaction'] == 1) {
-                            // For medicine transactions, show medicine amount
-                            let medAmount = ledger['medicine_amount'] ?? '0';
-                            medicineAmount = medAmount.toString().slice(0, -2) + '.' + medAmount.toString().slice(-2);
-                            regularAmount = ''; // Don't show regular amount for medicine transactions
+                            // For medicine transactions, show medicine_new_amount in Med. Amount column
+                            let medAmount = ledger['amount'] ?? '0';
+                            medicineAmount = Math.floor(parseFloat(medAmount));
+                            
+                            // Also show normal amount in Amount column for medicine transactions
+                            let amount = ledger['medicine_new_amount'] ?? '0';
+                            regularAmount = Math.floor(parseFloat(amount));
                         } else {
-                            // For non-medicine transactions, show regular amount
+                            // For non-medicine transactions, show only regular amount
                             let amount = ledger['amount'] ?? '0';
-                            regularAmount = amount.toString().slice(0, -2) + '.' + amount.toString().slice(-2);
+                            regularAmount = Math.floor(parseFloat(amount));
                             medicineAmount = ''; // Don't show medicine amount for regular transactions
                         }
 
-                        html +='<tr><td>'+serial+'</td><td>'+ledger['date']+'</td><td>'+ledger['ledger_name']+'</td><td>'+medicine_name+'</td><td>'+type+'</td><td>'+medicineAmount+'</td><td>'+regularAmount+'</td><td>'+ledger['opening_balance']+'</td><td>'+ledger['closing_balance']+'</td><td>'+remark+'</td></tr>';                     
+                        // Format opening and closing balance without decimal points
+                        let openingBalance = Math.floor(parseFloat(ledger['opening_balance'] ?? '0'));
+                        let closingBalance = Math.floor(parseFloat(ledger['closing_balance'] ?? '0'));
+
+                        html +='<tr><td>'+serial+'</td><td>'+ledger['date']+'</td><td>'+ledger['ledger_name']+'</td><td>'+medicine_name+'</td><td>'+type+'</td><td>'+medicineAmount+'</td><td>'+regularAmount+'</td><td>'+openingBalance+'</td><td>'+closingBalance+'</td><td>'+remark+'</td></tr>';                     
                     });
 
                     $("#report_data").append(html);

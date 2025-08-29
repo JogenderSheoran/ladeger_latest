@@ -48,91 +48,6 @@
         font-size: 12px !important;
         color: #736666;
         font-weight: bold;
-        text-align: center;
-    }
-
-    /* Enhanced table styling for better spacing */
-    #mytable {
-        font-size: 13px;
-        line-height: 1.6;
-    }
-    
-    #mytable th {
-        padding: 15px 12px !important;
-        white-space: nowrap;
-        font-weight: bold;
-        font-size: 12px;
-        text-align: center;
-        vertical-align: middle;
-        min-width: 100px;
-    }
-    
-    #mytable td {
-        padding: 12px 10px !important;
-        vertical-align: middle;
-        text-align: center;
-        word-wrap: break-word;
-        min-height: 50px;
-    }
-    
-    /* Optimized column widths for better header display */
-    #mytable th:nth-child(1), #mytable td:nth-child(1) { width: 6%; } /* Sr. No */
-    #mytable th:nth-child(2), #mytable td:nth-child(2) { width: 9%; } /* Date */
-    #mytable th:nth-child(3), #mytable td:nth-child(3) { width: 13%; } /* Medicine */
-    #mytable th:nth-child(4), #mytable td:nth-child(4) { width: 11%; } /* Ledger */
-    #mytable th:nth-child(5), #mytable td:nth-child(5) { width: 7%; } /* Type */
-    #mytable th:nth-child(6), #mytable td:nth-child(6) { width: 11%; } /* Med. Amount */
-    #mytable th:nth-child(7), #mytable td:nth-child(7) { width: 9%; } /* Amount */
-    #mytable th:nth-child(8), #mytable td:nth-child(8) { width: 7%; } /* Rate */
-    #mytable th:nth-child(9), #mytable td:nth-child(9) { width: 7%; } /* Rebate */
-    #mytable th:nth-child(10), #mytable td:nth-child(10) { width: 11%; } /* Remark */
-    #mytable th:nth-child(11), #mytable td:nth-child(11) { width: 9%; } /* Bill */
-    #mytable th:nth-child(12), #mytable td:nth-child(12) { width: 6%; } /* Action */
-    
-    /* Table container improvements */
-    .CustomFixedTbl {
-        margin: 20px 0;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        border-radius: 8px;
-        overflow: hidden;
-    }
-    
-    /* DataTable wrapper improvements */
-    .dataTables_wrapper {
-        padding: 20px;
-    }
-    
-    .dataTables_length, .dataTables_filter, .dataTables_info, .dataTables_paginate {
-        margin: 10px 0;
-    }
-    
-    /* Enhanced button hover effects */
-    #plusBtn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4) !important;
-        background: linear-gradient(45deg, #20c997 0%, #5ce1a8 100%) !important;
-    }
-    
-    #minusBtn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4) !important;
-        background: linear-gradient(45deg, #e74c3c 0%, #ff7979 100%) !important;
-    }
-    
-    #totalBtn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4) !important;
-    }
-    
-    #save:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4) !important;
-        background: linear-gradient(45deg, #0056b3 0%, #339af0 100%) !important;
-    }
-    
-    #wait:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4) !important;
     }
 </style>
 
@@ -225,37 +140,37 @@
 
                         <div class="d-flex justify-content-around my-3">
                             <!-- Plus Button -->
-                            <button id="plusBtn" class="btn btn-lg" style="background: linear-gradient(45deg, #28a745 0%, #6dd5a8 100%); color: white; font-weight: bold; border: 2px solid #20c997; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3); border-radius: 25px; padding: 12px 30px; margin: 5px; transition: all 0.3s ease;">
+                            <button id="plusBtn" class="btn btn-xs" style="background: #1e7e34; color: white; font-weight: bold; border: 1px solid #155724; box-shadow: 0 2px 8px rgba(30, 126, 52, 0.3); border-radius: 15px; padding: 6px 15px; margin: 3px; transition: all 0.3s ease; font-size: 12px;">
                                 <i class="fa fa-plus-circle"></i> <strong>Plus: + {{ $total_plus }}</strong>
                             </button>
 
                             <!-- Minus Button -->
-                            <button id="minusBtn" class="btn btn-lg" style="background: linear-gradient(45deg, #dc3545 0%, #ff6b7a 100%); color: white; font-weight: bold; border: 2px solid #fd7e14; box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3); border-radius: 25px; padding: 12px 30px; margin: 5px; transition: all 0.3s ease;">
+                            <button id="minusBtn" class="btn btn-xs" style="background: #bd2130; color: white; font-weight: bold; border: 1px solid #721c24; box-shadow: 0 2px 8px rgba(189, 33, 48, 0.3); border-radius: 15px; padding: 6px 15px; margin: 3px; transition: all 0.3s ease; font-size: 12px;">
                                 <i class="fa fa-minus-circle"></i> <strong>Minus: - {{ $total_minus }}</strong>
                             </button>
 
                             <!-- Total Button -->
-                            <button id="totalBtn" class="btn btn-lg" @if($total <= 0) style="background: linear-gradient(45deg, #dc3545 0%, #ff6b7a 100%); color: white; font-weight: bold; border: 2px solid #fd7e14; box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3); border-radius: 25px; padding: 12px 30px; margin: 5px; transition: all 0.3s ease;" @else style="background: linear-gradient(45deg, #28a745 0%, #6dd5a8 100%); color: white; font-weight: bold; border: 2px solid #20c997; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3); border-radius: 25px; padding: 12px 30px; margin: 5px; transition: all 0.3s ease;" @endif>
+                            <button id="totalBtn" class="btn btn-xs" @if($total <= 0) style="background: #bd2130; color: white; font-weight: bold; border: 1px solid #721c24; box-shadow: 0 2px 8px rgba(189, 33, 48, 0.3); border-radius: 15px; padding: 6px 15px; margin: 3px; transition: all 0.3s ease; font-size: 12px;" @else style="background: #1e7e34; color: white; font-weight: bold; border: 1px solid #155724; box-shadow: 0 2px 8px rgba(30, 126, 52, 0.3); border-radius: 15px; padding: 6px 15px; margin: 3px; transition: all 0.3s ease; font-size: 12px;" @endif>
                                 <i class="fa fa-calculator"></i> <strong>Total: {{ $total }}</strong>
                             </button>
                         </div><br>
                         
-                            <div class="table-responsive CustomFixedTbl">
+                            <div class="CustomFixedTbl" style="overflow-x: hidden; width: 100%;">
                                 <table class="table table-bordered" id="mytable" style="width: 100%; table-layout: fixed;">
                                     <thead>
                                         <tr>
-                                            <th class="text-effect">Sr. No.</th>
-                                            <th class="text-effect">Date</th>
-                                            <th class="text-effect">Medicine</th>
-                                            <th class="text-effect">Ledger</th>
-                                            <th class="text-effect">Type</th>
-                                            <th class="text-effect">Med. Amount</th>
-                                            <th class="text-effect">Amount</th>
-                                            <th class="text-effect">Rate</th>
-                                            <th class="text-effect">Rebate</th>
-                                            <th class="text-effect">Remark</th>
-                                            <th class="text-effect">Bill</th>
-                                            <th class="text-effect">Action</th>
+                                            <th class="text-effect" style="width: 70px; font-size: 12px;">Sr.No</th>
+                                            <th class="text-effect" style="width: 40px; font-size: 12px;">Date</th>
+                                            <th class="text-effect" style="width: 80px; font-size: 12px;">Medicine</th>
+                                            <th class="text-effect" style="width: 75px; font-size: 12px;">Ledger</th>
+                                            <th class="text-effect" style="width: 50px; font-size: 12px;">Type</th>
+                                            <th class="text-effect" style="width: 65px; font-size: 12px;">Med. Amt</th>
+                                            <th class="text-effect" style="width: 60px; font-size: 12px;">Amount</th>
+                                            <th class="text-effect" style="width: 50px; font-size: 12px;">Rate</th>
+                                            <th class="text-effect" style="width: 55px; font-size: 12px;">Rebate</th>
+                                            <th class="text-effect" style="width: 90px; font-size: 12px;">Remark</th>
+                                            <th class="text-effect" style="width: 50px; font-size: 12px;">Bill</th>
+                                            <th class="text-effect" style="width: 70px; font-size: 12px;">Action</th>
                                         </tr>
                                     </thead>
 
@@ -264,18 +179,18 @@
                                     </tbody>
                                     <tfoot class="dataTables_scrollHead">
                                         <tr>
-                                            <th class="text-effect">Sr. No.</th>
-                                            <th class="text-effect">Date</th>
-                                            <th class="text-effect">Medicine</th>
-                                            <th class="text-effect">Ledger</th>
-                                            <th class="text-effect">Type</th>
-                                            <th class="text-effect">Med. Amount</th>
-                                            <th class="text-effect">Amount</th>
-                                            <th class="text-effect">Rate</th>
-                                            <th class="text-effect">Rebate</th>
-                                            <th class="text-effect">Remark</th>
-                                            <th class="text-effect">Bill</th>
-                                            <th class="text-effect">Action</th>
+                                            <th class="text-effect" style="width: 40px; font-size: 12px;">Sr.</th>
+                                            <th class="text-effect" style="width: 70px; font-size: 12px;">Date</th>
+                                            <th class="text-effect" style="width: 80px; font-size: 12px;">Medicine</th>
+                                            <th class="text-effect" style="width: 75px; font-size: 12px;">Ledger</th>
+                                            <th class="text-effect" style="width: 50px; font-size: 12px;">Type</th>
+                                            <th class="text-effect" style="width: 65px; font-size: 12px;">Med. Amt</th>
+                                            <th class="text-effect" style="width: 60px; font-size: 12px;">Amount</th>
+                                            <th class="text-effect" style="width: 50px; font-size: 12px;">Rate</th>
+                                            <th class="text-effect" style="width: 55px; font-size: 12px;">Rebate</th>
+                                            <th class="text-effect" style="width: 90px; font-size: 12px;">Remark</th>
+                                            <th class="text-effect" style="width: 50px; font-size: 12px;">Bill</th>
+                                            <th class="text-effect" style="width: 70px; font-size: 12px;">Action</th>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -284,7 +199,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> 
     </div>
 </div>
 </div>
@@ -1178,8 +1093,8 @@ $('#edit_journal_voucher').submit(function (e) {
                     
                     // Update Total button with conditional styling
                     var totalBtnStyle = response.total <= 0 
-                        ? 'background: linear-gradient(45deg, #ff416c 0%, #ff4b2b 100%); color: white; font-weight: bold; border: none; box-shadow: 0 4px 15px rgba(255, 65, 108, 0.4); border-radius: 20px; padding: 10px 25px; margin: 5px;'
-                        : 'background: linear-gradient(45deg, #56ab2f 0%, #a8e6cf 100%); color: white; font-weight: bold; border: none; box-shadow: 0 4px 15px rgba(86, 171, 47, 0.4); border-radius: 20px; padding: 10px 25px; margin: 5px;';
+                        ? 'background: linear-gradient(45deg,rgb(241, 6, 61) 0%,rgb(223, 42, 10) 100%); color: white; font-weight: bold; border: none; box-shadow: 0 4px 15px rgba(255, 65, 108, 0.4); border-radius: 20px; padding: 10px 25px; margin: 5px;'
+                        : 'background: linear-gradient(45deg,rgb(49, 143, 6) 0%,rgb(10, 121, 80) 100%); color: white; font-weight: bold; border: none; box-shadow: 0 4px 15px rgba(86, 171, 47, 0.4); border-radius: 20px; padding: 10px 25px; margin: 5px;';
                     
                     $('#totalBtn').attr('style', totalBtnStyle).html('<i class="fa fa-calculator"></i> <strong>Total: ' + response.total + '</strong>');
                 }

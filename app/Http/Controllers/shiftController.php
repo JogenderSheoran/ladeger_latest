@@ -64,11 +64,43 @@ class shiftController extends Controller
         return View::make('ledgers.ledger',compact('title','ledger'));
     }
 
+    public function check_ledger_name(Request $request){
+        $name = $request->name;
+        $id = $request->id; // For edit mode
+        
+        if($id && $id != ''){
+            // For edit mode, exclude current record
+            $check = ledger::where('name', $name)
+                          ->where('admin_id', Auth::user()->id)
+                          ->where('status', 1)
+                          ->where('id', '!=', $id)
+                          ->first();
+        } else {
+            // For new record
+            $check = ledger::where('name', $name)
+                          ->where('admin_id', Auth::user()->id)
+                          ->where('status', 1)
+                          ->first();
+        }
+        
+        if($check){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'This ledger name already exists. Please enter a unique name.'
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Ledger name is available.'
+            ]);
+        }
+    }
+
     public function submit_ledger(Request $r){
             if($r->id!=''){
-                $insert=ledger::find($r->id);
+                $insert=ledger::where('admin_id',Auth::user()->id)->find($r->id);
             }else{
-                $check=ledger::where('name',$r->name)->where('status',1)->first();
+                $check=ledger::where('name',$r->name)->where('admin_id',Auth::user()->id)->where('status',1)->first();
                 if($check){
                     return redirect()->back()->with('error','Error! Ledger name already exists,Please enter unique name');
                 }

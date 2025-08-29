@@ -431,7 +431,7 @@ class VoucherController extends Controller
             $amount = $isDeleted ? '0' : (($value->type == 'minus' ? '- ' : '+ ') . $value->medicine_amount);
             $medicineAmount = $isDeleted ? '0' : (($value->type == 'minus' ? '- ' : '+ ') . $value->amount);
 
-            $actionButton = '<div style="display: flex; gap: 8px; justify-content: center; align-items: center;">
+            $actionButton = '<div style="display: grid; gap:2px; justify-content: center; align-items: center;">
             <a href="javascript:void(0)" onclick="showTransactionDetails(' . $value->ledger_id . ')" class="btn btn-sm" title="View Details">
                 <i class="fa fa-eye" style="font-size: 12px;"></i>
             </a>';

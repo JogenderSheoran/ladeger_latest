@@ -199,6 +199,8 @@
                                                                     <div class="form-group">
                                                                         <label class="control-label ledger-font">Ledger Name</label>
                                                                         <input type="text" autocomplete="off" name="name" id="name" required class="form-control input" />
+                                                                        <div id="name-error" class="text-danger" style="display: none; margin-top: 5px; font-size: 12px;"></div>
+                                                                        <div id="name-success" class="text-success" style="display: none; margin-top: 5px; font-size: 12px;"></div>
                                                                     </div>
                                                                 </div>
                                                                 <input type="hidden" id="admin_id" name="admin_id" value="{{ Auth::user()->id }}">
@@ -1163,6 +1165,80 @@ function removeDiv(id){
             }
         });
     }
+
+    // AJAX validation for ledger name uniqueness
+    function checkLedgerName() {
+        var name = $('#name').val().trim();
+        var id = $('#id').val(); // For edit mode
+        
+        if(name === '') {
+            $('#name-error').hide();
+            $('#name-success').hide();
+            return;
+        }
+        
+        $.ajax({
+            url: "{{ route('check_ledger_name') }}",
+            type: 'POST',
+            data: {
+                name: name,
+                id: id,
+                _token: "{{ csrf_token() }}"
+            },
+            success: function(response) {
+                if(response.status === 'error') {
+                    $('#name-error').text(response.message).show();
+                    $('#name-success').hide();
+                    $('#name').addClass('is-invalid');
+                } else {
+                    $('#name-success').text(response.message).show();
+                    $('#name-error').hide();
+                    $('#name').removeClass('is-invalid');
+                }
+            },
+            error: function(xhr, status, error) {
+                $('#name-error').text('Error checking ledger name. Please try again.').show();
+                $('#name-success').hide();
+            }
+        });
+    }
+
+    // Bind the validation to name input field
+    $(document).ready(function() {
+        $('#name').on('blur keyup', function() {
+            var name = $(this).val().trim();
+            if(name.length >= 2) {
+                setTimeout(checkLedgerName, 500); // Delay to avoid too many requests
+            }
+        });
+        
+        // Prevent form submission if ledger name already exists
+        $('#ledger_form').on('submit', function(e) {
+            if($('#name-error').is(':visible')) {
+                e.preventDefault();
+                alert('Please fix the ledger name error before submitting.');
+                return false;
+            }
+        });
+    });
+
+    // Function to clear/empty the name input field
+    function clearNameField() {
+        $('#name').val('');
+        $('#name-error').hide();
+        $('#name-success').hide();
+        $('#name').removeClass('is-invalid');
+    }
+
+    // Clear form when modal is closed or opened
+    $('#addShift').on('hidden.bs.modal', function () {
+        clearNameField();
+        $('#ledger_form')[0].reset(); // Reset entire form
+    });
+
+    $('#addShift').on('show.bs.modal', function () {
+        clearNameField();
+    });
 </script>
 <scirpt src="http://select2.github.io/select2/select2-3.5.1/select2.js"></script>
 

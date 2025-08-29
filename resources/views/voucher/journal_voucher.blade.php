@@ -184,8 +184,8 @@
                                                 @endif
 
                                             </td>
-                                            <td class="text-effect"> @if($value->medicine_transaction==0) {{substr_replace($value->amount,'.',-2,0)}} @else {{substr_replace($value->medicine_new_amount,'.',-2,0)}}  @endif</td>
-                                            <td class="text-effect"> @if($value->medicine_transaction==1) {{substr_replace($value->medicine_amount,'.',-2,0)}} @endif</td>
+                                            <td class="text-effect"> @if($value->medicine_transaction==0) {{$value->amount}} @else {{$value->medicine_new_amount}}  @endif</td>
+                                            <td class="text-effect"> @if($value->medicine_transaction==1) {{$value->medicine_amount}} @endif</td>
                                             <td class="text-effect">{{$value->remark}} @if($value->remark1!='') ({{$value->remark1}}) @endif</td>
 
                                             <td class="text-effect"><input @if($value->transaction_status==1) checked @endif type="checkbox" id="t{{$value->id}}" class="form-control" style="height:15px;" onclick="change_status({{$value->id}})" ></td>

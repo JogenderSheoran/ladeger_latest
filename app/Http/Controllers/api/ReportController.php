@@ -354,7 +354,7 @@ class ReportController extends Controller
                         $dene=$dene+$d->amount;
                     }
                     $d->ledger_name=ledger::where('id',$d->ledger_id)->value('name');
-                    $d->amount=substr_replace($d->amount,'.',-2,0);
+                    $d->amount=$d->amount;
             }
             if($lene > $dene){
                 $profit=$lene - $dene;
