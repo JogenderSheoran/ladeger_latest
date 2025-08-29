@@ -75,19 +75,19 @@
         min-height: 50px;
     }
     
-    /* Optimized column widths for fixed layout without scrolling */
-    #mytable th:nth-child(1), #mytable td:nth-child(1) { width: 5%; } /* Sr. No */
-    #mytable th:nth-child(2), #mytable td:nth-child(2) { width: 8%; } /* Date */
-    #mytable th:nth-child(3), #mytable td:nth-child(3) { width: 12%; } /* Medicine */
-    #mytable th:nth-child(4), #mytable td:nth-child(4) { width: 10%; } /* Ledger */
-    #mytable th:nth-child(5), #mytable td:nth-child(5) { width: 8%; } /* Type */
-    #mytable th:nth-child(6), #mytable td:nth-child(6) { width: 10%; } /* Medicine Amount */
-    #mytable th:nth-child(7), #mytable td:nth-child(7) { width: 8%; } /* Amount */
-    #mytable th:nth-child(8), #mytable td:nth-child(8) { width: 6%; } /* Rate */
-    #mytable th:nth-child(9), #mytable td:nth-child(9) { width: 6%; } /* Rebate */
-    #mytable th:nth-child(10), #mytable td:nth-child(10) { width: 12%; } /* Remark */
-    #mytable th:nth-child(11), #mytable td:nth-child(11) { width: 10%; } /* Bill */
-    #mytable th:nth-child(12), #mytable td:nth-child(12) { width: 5%; } /* Action */
+    /* Optimized column widths for better header display */
+    #mytable th:nth-child(1), #mytable td:nth-child(1) { width: 6%; } /* Sr. No */
+    #mytable th:nth-child(2), #mytable td:nth-child(2) { width: 9%; } /* Date */
+    #mytable th:nth-child(3), #mytable td:nth-child(3) { width: 13%; } /* Medicine */
+    #mytable th:nth-child(4), #mytable td:nth-child(4) { width: 11%; } /* Ledger */
+    #mytable th:nth-child(5), #mytable td:nth-child(5) { width: 7%; } /* Type */
+    #mytable th:nth-child(6), #mytable td:nth-child(6) { width: 11%; } /* Med. Amount */
+    #mytable th:nth-child(7), #mytable td:nth-child(7) { width: 9%; } /* Amount */
+    #mytable th:nth-child(8), #mytable td:nth-child(8) { width: 7%; } /* Rate */
+    #mytable th:nth-child(9), #mytable td:nth-child(9) { width: 7%; } /* Rebate */
+    #mytable th:nth-child(10), #mytable td:nth-child(10) { width: 11%; } /* Remark */
+    #mytable th:nth-child(11), #mytable td:nth-child(11) { width: 9%; } /* Bill */
+    #mytable th:nth-child(12), #mytable td:nth-child(12) { width: 6%; } /* Action */
     
     /* Table container improvements */
     .CustomFixedTbl {
@@ -241,14 +241,15 @@
                         </div><br>
                         
                             <div class="table-responsive CustomFixedTbl">
-                                <table class="table table-bordered" id="mytable" style="width: 100%; table-layout: fixed;">                                   <thead>
+                                <table class="table table-bordered" id="mytable" style="width: 100%; table-layout: fixed;">
+                                    <thead>
                                         <tr>
                                             <th class="text-effect">Sr. No.</th>
                                             <th class="text-effect">Date</th>
                                             <th class="text-effect">Medicine</th>
                                             <th class="text-effect">Ledger</th>
                                             <th class="text-effect">Type</th>
-                                            <th class="text-effect">Medicine Amount</th>
+                                            <th class="text-effect">Med. Amount</th>
                                             <th class="text-effect">Amount</th>
                                             <th class="text-effect">Rate</th>
                                             <th class="text-effect">Rebate</th>
@@ -263,20 +264,18 @@
                                     </tbody>
                                     <tfoot class="dataTables_scrollHead">
                                         <tr>
-                                        <tr>
                                             <th class="text-effect">Sr. No.</th>
                                             <th class="text-effect">Date</th>
                                             <th class="text-effect">Medicine</th>
                                             <th class="text-effect">Ledger</th>
                                             <th class="text-effect">Type</th>
-                                            <th class="text-effect">Medicine Amount</th>
+                                            <th class="text-effect">Med. Amount</th>
                                             <th class="text-effect">Amount</th>
                                             <th class="text-effect">Rate</th>
                                             <th class="text-effect">Rebate</th>
                                             <th class="text-effect">Remark</th>
                                             <th class="text-effect">Bill</th>
                                             <th class="text-effect">Action</th>
-                                        </tr>
                                         </tr>
                                     </tfoot>
                                 </table>

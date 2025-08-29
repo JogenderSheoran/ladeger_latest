@@ -328,32 +328,22 @@
                             var medicine_name='';
                         }
 
-                        var formattedAmount;
-                        var formattedNewAmount;
-
-                        if (ledger['medicine_transaction'] == 0) {
-                            let amount = ledger['amount'] ?? '0'; // Use '0' as default if null
-                            formattedAmount = amount.toString().slice(0, -2) + '.' + amount.toString().slice(-2);
-                        } else {
-                            let medicineAmount = ledger['medicine_amount'] ?? '0'; // Default to '0' if null
-                            let medicineNewAmount = ledger['medicine_new_amount'] ?? '0'; // Default to '0' if null
-                            console.log("check the medicineNew",medicineNewAmount);
-
-                            formattedAmount = medicineAmount.toString().slice(0, -2) + '.' + medicineNewAmount.toString().slice(-2);
-                        }
+                        var medicineAmount = '';
+                        var regularAmount = '';
 
                         if (ledger['medicine_transaction'] == 1) {
-                            formattedNewAmount = ledger['medicine_new_amount'].toString().slice(0, -2) + '.' + ledger['medicine_amount'].toString().slice(-2);
+                            // For medicine transactions, show medicine amount
+                            let medAmount = ledger['medicine_amount'] ?? '0';
+                            medicineAmount = medAmount.toString().slice(0, -2) + '.' + medAmount.toString().slice(-2);
+                            regularAmount = ''; // Don't show regular amount for medicine transactions
                         } else {
-                            formattedNewAmount = ''; // or any default value if needed
+                            // For non-medicine transactions, show regular amount
+                            let amount = ledger['amount'] ?? '0';
+                            regularAmount = amount.toString().slice(0, -2) + '.' + amount.toString().slice(-2);
+                            medicineAmount = ''; // Don't show medicine amount for regular transactions
                         }
 
-                       
-                        
-
-                                           
-
-                        html +='<tr><td>'+serial+'</td><td>'+ledger['date']+'</td><td>'+ledger['ledger_name']+'</td><td>'+medicine_name+'</td><td>'+type+'</td><td>'+formattedAmount+'</td>><td>'+formattedNewAmount+'</td><td>'+ledger['opening_balance']+'</td><td>'+ledger['closing_balance']+'</td><td>'+remark+'</td></tr>';                     
+                        html +='<tr><td>'+serial+'</td><td>'+ledger['date']+'</td><td>'+ledger['ledger_name']+'</td><td>'+medicine_name+'</td><td>'+type+'</td><td>'+medicineAmount+'</td><td>'+regularAmount+'</td><td>'+ledger['opening_balance']+'</td><td>'+ledger['closing_balance']+'</td><td>'+remark+'</td></tr>';                     
                     });
 
                     $("#report_data").append(html);
