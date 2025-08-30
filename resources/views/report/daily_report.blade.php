@@ -294,17 +294,16 @@
                     // $("#minus").text('Dene :'+res.dene);
                     console.log(res.data);
                     $.each(res.data, function (key, ledger) {
-                        console.log(ledger);
-                        
+                       
                         var serial=parseFloat(key)+1;
                         last_serial=serial;
 
                         var type;
-                            if (ledger['medicine_transaction'] == '' || ledger['medicine_transaction'] == 0) {
+                            if (ledger['medicine_transaction'] === null || ledger['medicine_transaction'] === null) {
                                 if (ledger['cr_dr'] == 'lene') {
-                                    type = '<span class="label label-sm label-success label-mini" style="background-color:red"><b>Lene</b></span>';
+                                    type = '<span class="label label-sm label-success label-mini" style="background-color:red"><b>lene</b></span>';
                                 } else {
-                                    type = '<span class="label label-sm label-success label-mini" style="background-color:green"><b>Dene</b></span>';
+                                    type = '<span class="label label-sm label-success label-mini" style="background-color:green"><b>dene</b></span>';
                                 }
                             } else {
                                 if (ledger['medicine_transaction_type'] == 'minus') {

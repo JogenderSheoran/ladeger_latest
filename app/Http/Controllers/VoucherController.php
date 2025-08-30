@@ -530,41 +530,82 @@ class VoucherController extends Controller
         }
     }
 
-    public function getMedicineTotals(Request $request)
-    {
-        try {
-            $today = Carbon::today()->toDateString();
-            $total_plus = MedicineTransaction::where('admin_id', Auth::user()->id)
-                ->where('date', $today)
-                ->where('type', 'plus')
-                ->where(function($query) {
-                    $query->where('is_deleted', '!=', 1)->orWhereNull('is_deleted');
-                })
-                ->sum('medicine_amount');
+    // public function getMedicineTotals(Request $request)
+    // {
+    //     try {
+    //         $today = Carbon::today()->toDateString();
+    //         $total_plus = MedicineTransaction::where('admin_id', Auth::user()->id)
+    //             ->where('date', $today)
+    //             ->where('type', 'plus')
+    //             ->where(function($query) {
+    //                 $query->where('is_deleted', '!=', 1)->orWhereNull('is_deleted');
+    //             })
+    //             ->sum('medicine_amount');
                 
-            $total_minus = MedicineTransaction::where('admin_id', Auth::user()->id)
-                ->where('date', $today)
-                ->where('type', 'minus')
-                ->where(function($query) {
-                    $query->where('is_deleted', '!=', 1)->orWhereNull('is_deleted');
-                })
-                ->sum('medicine_amount');
+    //         $total_minus = MedicineTransaction::where('admin_id', Auth::user()->id)
+    //             ->where('date', $today)
+    //             ->where('type', 'minus')
+    //             ->where(function($query) {
+    //                 $query->where('is_deleted', '!=', 1)->orWhereNull('is_deleted');
+    //             })
+    //             ->sum('medicine_amount');
                 
-            $total = $total_plus - $total_minus;
+    //         $total = $total_plus - $total_minus;
 
-            return response()->json([
-                'status' => 'success',
-                'total_plus' => $total_plus,
-                'total_minus' => $total_minus,
-                'total' => $total
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Error getting totals: ' . $e->getMessage()
-            ]);
-        }
+    //         return response()->json([
+    //             'status' => 'success',
+    //             'total_plus' => $total_plus,
+    //             'total_minus' => $total_minus,
+    //             'total' => $total
+    //         ]);
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => 'Error getting totals: ' . $e->getMessage()
+    //         ]);
+    //     }
+    // }
+
+    public function getMedicineTotals(Request $request)
+{
+    try {
+        // Timezone dhyaan rahe: config/app.php -> 'timezone' => 'Asia/Kolkata'
+        $start = Carbon::today()->subDays(2)->toDateString(); // aaj - 2 din
+        $end   = Carbon::today()->toDateString();             // aaj
+
+        $base = MedicineTransaction::where('admin_id', Auth::id())
+            ->whereBetween('date', [$start, $end])
+            ->where(function($q){
+                $q->where('is_deleted', '!=', 1)->orWhereNull('is_deleted');
+            });
+
+        // Single query me plus/minus totals nikaal lo
+        $totals = (clone $base)
+            ->selectRaw("
+                COALESCE(SUM(CASE WHEN type = 'plus'  THEN medicine_amount ELSE 0 END),0)  AS total_plus,
+                COALESCE(SUM(CASE WHEN type = 'minus' THEN medicine_amount ELSE 0 END),0)  AS total_minus
+            ")
+            ->first();
+
+        $totalPlus  = (float) ($totals->total_plus  ?? 0);
+        $totalMinus = (float) ($totals->total_minus ?? 0);
+        $total      = $totalPlus - $totalMinus;
+
+        return response()->json([
+            'status'       => 'success',
+            'range'        => ['from' => $start, 'to' => $end], // info: kaunse 3 din cover hue
+            'total_plus'   => $totalPlus,
+            'total_minus'  => $totalMinus,
+            'total'        => $total,
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'status'  => 'error',
+            'message' => 'Error getting totals: ' . $e->getMessage()
+        ], 500);
     }
+}
 
   
 }
