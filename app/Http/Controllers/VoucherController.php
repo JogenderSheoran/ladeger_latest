@@ -211,25 +211,28 @@ class VoucherController extends Controller
         
 
         $data = $query->get();
-       
-    
-        $totalPlus = 0;
-        $totalMinus = 0;
-    
-        foreach ($data as $d) {
-            $medicine = Medicine::withTrashed()->where('id', $d->medicine_id)->first();
-            // dd($medicine);
-            if($medicine!=''){
-                $d->medicine_name = $medicine->medicine_name;
-            }
-            else{
-                $d->medicine_name = 'N/A';
-            }
-            
-            $d->medicine_amount = (int)$d->medicine_amount;
-            $d->rate = $medicine->medicine_rate;
-            $d->rebate = $medicine->medicine_rebate;
-            $d->ledger_name = Ledger::where('id', $d->ledger_id)->value('name');
+   
+
+    $totalPlus = 0;
+    $totalMinus = 0;
+
+    foreach ($data as $d) {
+        $medicine = Medicine::withTrashed()->where('id', $d->medicine_id)->first();
+        // dd($medicine);
+        if($medicine!=''){
+            $d->medicine_name = $medicine->medicine_name;
+        }
+        else{
+            $d->medicine_name = 'N/A';
+        }
+        
+        $d->medicine_amount = (int)$d->medicine_amount;
+        $d->rate = $medicine->medicine_rate;
+        $d->rebate = $medicine->medicine_rebate;
+        $d->ledger_name = Ledger::where('id', $d->ledger_id)->value('name');
+        
+        // Format the date for display
+        $d->formatted_date = $d->created_at ? $d->created_at->format('d/m/Y') : '';
     
             if ($d->type == 'plus') {
                 $totalPlus += $d->medicine_amount;

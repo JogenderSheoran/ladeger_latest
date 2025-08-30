@@ -226,6 +226,7 @@
                     <table class="table table-bordered" id="mytable">
                         <thead>
                             <tr>
+                                <th>Date</th>
                                 <th>Ledger Name</th>
                                 <th>Medicine Name</th>
                                 <th>Medicie Amount</th>
@@ -1133,7 +1134,19 @@ $('#edit_journal_voucher').submit(function (e) {
                         amountColumn = '<span style="color: green;">+ ' + transaction.amount + '</span>';
                     }
 
+                    // Format the date
+                    var transactionDate = '';
+                    if (transaction.created_at) {
+                        var date = new Date(transaction.created_at);
+                        transactionDate = date.toLocaleDateString('en-IN', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric'
+                        });
+                    }
+
                     var row = '<tr>' +
+                        '<td><strong>' + transactionDate + '</strong></td>' +
                         '<td>' + transaction.ledger_name + '</td>' +
                         '<td>' + transaction.medicine_name + '</td>' +
                         '<td>' + amountColumn + '</td>' +
