@@ -15,10 +15,90 @@
         min-width: 193px;
     }
     @media only screen and (max-width: 600px) {
-    .mobile{
-        width:45% !important
-    }  
-}
+        .mobile{
+            width:45% !important
+        }
+        
+        .btn-group {
+            margin-bottom: 5px;
+        }
+        
+        .portlet-title .col-md-12 {
+            padding: 0 5px;
+        }
+        
+        .form-control-inline {
+            font-size: 12px;
+        }
+        
+        .container-fluid {
+            padding: 0 10px !important;
+        }
+    }
+    
+    @media only screen and (max-width: 768px) {
+        .table-responsive-custom {
+            overflow: hidden;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 100%;
+        }
+        
+        .table-responsive-custom table {
+            width: 100% !important;
+            margin-bottom: 0;
+            table-layout: auto;
+        }
+        
+        .btn-group {
+            flex-wrap: wrap;
+        }
+        
+        .d-flex {
+            flex-wrap: wrap;
+            justify-content: center !important;
+        }
+        
+        .d-flex .btn {
+            margin: 1px;
+            font-size: 8px !important;
+            padding: 2px 4px !important;
+        }
+        
+        .table th, .table td {
+            font-size: 7px !important;
+            padding: 2px 1px !important;
+            text-align: center;
+            word-wrap: break-word;
+            max-width: 60px;
+        }
+        
+        .table th {
+            font-size: 8px !important;
+            font-weight: bold;
+        }
+        
+        .row {
+            margin-left: -2px;
+            margin-right: -2px;
+        }
+        
+        .row > [class*="col-"] {
+            padding-left: 2px;
+            padding-right: 2px;
+            margin-bottom: 3px;
+        }
+        
+        .form-control {
+            font-size: 10px !important;
+            padding: 3px !important;
+        }
+        
+        .btn {
+            font-size: 9px !important;
+            padding: 3px 6px !important;
+        }
+    }
 </style>
 <style>
     .dataTables_filter {
@@ -82,55 +162,78 @@
                             <div class="portlet light ">
                                 <div class="portlet-title">
                                     <div class="col-md-12" style="margin-bottom: 5px;">
-                                        <div class="btn-group">
-                                            <input type="date" id="date_from" name="date"
-                                                class="input-group form-control form-control-inline"
-                                                value="{{ date('Y-m-d')}}"/>
-                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-2 col-sm-6 col-xs-6">
+                                                <div class="btn-group" style="width: 100%;">
+                                                    <input type="date" id="date_from" name="date"
+                                                        class="input-group form-control form-control-inline"
+                                                        value="{{ date('Y-m-d')}}" style="width: 100%;"/>
+                                                </div>
+                                            </div>
 
-                                        <input type="hidden" id="party1" name="medicine_id" />
-                                        <input type="hidden" name="admin_id" value="{{Auth::user()->id}}">
-                                        <div class="btn-group">
-                                            <input type="text" autocomplete="off" placeholder="Medicine" 
-                                                oninput='onInput_party()' list="party_balance_list" id="party_balance"
-                                                name="medicine_name" class="input-group form-control form-control-inline"
-                                                required autofocus>
-                                            <datalist id="party_balance_list" name="medicine_id">
-                                                @foreach($medicine as $m)
-                                                <option value='{{$m->medicine_name}}'>{{$m->id}}</option>
-                                                @endforeach
-                                            </datalist>
-                                        </div>
-                                        <div class="btn-group mobile" style="width:8%">
-                                            <input type="text" id="amount" name="amount" autocomplete="off"  placeholder="Amount"
-                                                class="input-group form-control form-control-inline" required/>
-                                        </div>
-                                        <div class="btn-group">
-                                            <select class="form-control" name="type" id="type">
-                                                <option value="minus" selected>Minus</option>
-                                                <option value="plus">Plus</option>
-                                            </select>
-                                        </div>
-                                        <input type="hidden" id="party2" name="ledger_id_2" />
-                                        <div class="btn-group" style="display:none;" id="type_section">
-                                            <input type="text" autocomplete="off" placeholder="Medicine"
-                                                oninput='onInput_opposite()' list="opposite_party_list" id="opposite_party_balance"
-                                                name="ledger_name_2" class="input-group form-control form-control-inline"
-                                                >
-                                            <datalist id="opposite_party_list" name="ledger_id2">
-                                                @foreach($medicine as $m)
-                                                <option value='{{$m->medicine_name}}'>{{$m->id}}</option>
-                                                @endforeach
-                                            </datalist>
-                                        </div>
-                                        <div class="btn-group mobile" style="width:8%">
-                                            <input type="text" id="remark" autocomplete="off" name="remark" placeholder="remark"
-                                                class="input-group form-control form-control-inline" />
-                                        </div>
-                                        <div class="btn-group">
-                                            <button type="submit" id="save" class="btn" style="background: linear-gradient(45deg, #007bff 0%, #4dabf7 100%); color: white; font-weight: bold; border: 2px solid #0056b3; box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3); border-radius: 8px; padding: 8px 20px; transition: all 0.3s ease;">Save</button>
-                                            <button style="display:none;" id="wait" class="btn" style="background: linear-gradient(45deg, #ffc107 0%, #ffeb3b 100%); color: #212529; font-weight: bold; border: 2px solid #e0a800; box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3); border-radius: 8px; padding: 8px 20px;"><i
-                                                    class="icon-spinner"></i>Please Wait...</button>
+                                            <input type="hidden" id="party1" name="medicine_id" />
+                                            <input type="hidden" name="admin_id" value="{{Auth::user()->id}}">
+                                            
+                                            <div class="col-md-3 col-sm-6 col-xs-6">
+                                                <div class="btn-group" style="width: 100%;">
+                                                    <input type="text" autocomplete="off" placeholder="Medicine" 
+                                                        oninput='onInput_party()' list="party_balance_list" id="party_balance"
+                                                        name="medicine_name" class="input-group form-control form-control-inline"
+                                                        required autofocus style="width: 100%;">
+                                                    <datalist id="party_balance_list" name="medicine_id">
+                                                        @foreach($medicine as $m)
+                                                        <option value='{{$m->medicine_name}}'>{{$m->id}}</option>
+                                                        @endforeach
+                                                    </datalist>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-md-2 col-sm-4 col-xs-6">
+                                                <div class="btn-group mobile" style="width: 100%;">
+                                                    <input type="text" id="amount" name="amount" autocomplete="off"  placeholder="Amount"
+                                                        class="input-group form-control form-control-inline" required style="width: 100%;"/>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-md-2 col-sm-4 col-xs-6">
+                                                <div class="btn-group" style="width: 100%;">
+                                                    <select class="form-control" name="type" id="type" style="width: 100%;">
+                                                        <option value="minus" selected>Minus</option>
+                                                        <option value="plus">Plus</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            
+                                            <input type="hidden" id="party2" name="ledger_id_2" />
+                                            
+                                            <div class="col-md-3 col-sm-4 col-xs-6" style="display:none;" id="type_section">
+                                                <div class="btn-group" style="width: 100%;">
+                                                    <input type="text" autocomplete="off" placeholder="Medicine"
+                                                        oninput='onInput_opposite()' list="opposite_party_list" id="opposite_party_balance"
+                                                        name="ledger_name_2" class="input-group form-control form-control-inline"
+                                                        style="width: 100%;">
+                                                    <datalist id="opposite_party_list" name="ledger_id2">
+                                                        @foreach($medicine as $m)
+                                                        <option value='{{$m->medicine_name}}'>{{$m->id}}</option>
+                                                        @endforeach
+                                                    </datalist>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-md-2 col-sm-6 col-xs-6">
+                                                <div class="btn-group mobile" style="width: 100%;">
+                                                    <input type="text" id="remark" autocomplete="off" name="remark" placeholder="Remark"
+                                                        class="input-group form-control form-control-inline" style="width: 100%;" />
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-md-1 col-sm-6 col-xs-12">
+                                                <div class="btn-group" style="width: 100%;">
+                                                    <button type="submit" id="save" class="btn" style="background: linear-gradient(45deg, #007bff 0%, #4dabf7 100%); color: white; font-weight: bold; border: 2px solid #0056b3; box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3); border-radius: 8px; padding: 8px 20px; transition: all 0.3s ease; width: 100%;">Save</button>
+                                                    <button style="display:none;" id="wait" class="btn" style="background: linear-gradient(45deg, #ffc107 0%, #ffeb3b 100%); color: #212529; font-weight: bold; border: 2px solid #e0a800; box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3); border-radius: 8px; padding: 8px 20px; width: 100%;"><i
+                                                            class="icon-spinner"></i>Please Wait...</button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                     </form>
@@ -155,22 +258,22 @@
                             </button>
                         </div><br>
                         
-                            <div class="CustomFixedTbl" style="overflow-x: hidden; width: 100%;">
-                                <table class="table table-bordered" id="mytable" style="width: 100%; table-layout: fixed;">
+                            <div class="table-responsive-custom" style="overflow-x: auto; width: 100%;">
+                                <table class="table table-bordered" id="mytable" style="width: 100%;">
                                     <thead>
                                         <tr>
-                                            <th class="text-effect" style="width: 70px; font-size: 12px;">Sr.No</th>
-                                            <th class="text-effect" style="width: 40px; font-size: 12px;">Date</th>
-                                            <th class="text-effect" style="width: 80px; font-size: 12px;">Medicine</th>
-                                            <th class="text-effect" style="width: 75px; font-size: 12px;">Ledger</th>
-                                            <th class="text-effect" style="width: 50px; font-size: 12px;">Type</th>
-                                            <th class="text-effect" style="width: 65px; font-size: 12px;">Med. Amt</th>
-                                            <th class="text-effect" style="width: 60px; font-size: 12px;">Amount</th>
-                                            <th class="text-effect" style="width: 50px; font-size: 12px;">Rate</th>
-                                            <th class="text-effect" style="width: 55px; font-size: 12px;">Rebate</th>
-                                            <th class="text-effect" style="width: 90px; font-size: 12px;">Remark</th>
-                                            <th class="text-effect" style="width: 50px; font-size: 12px;">Bill</th>
-                                            <th class="text-effect" style="width: 70px; font-size: 12px;">Action</th>
+                                            <th class="text-effect" style="width: 5%; font-size: 12px;">Sr.</th>
+                                            <th class="text-effect" style="width: 8%; font-size: 12px;">Date</th>
+                                            <th class="text-effect" style="width: 12%; font-size: 12px;">Medicine</th>
+                                            <th class="text-effect" style="width: 10%; font-size: 12px;">Ledger</th>
+                                            <th class="text-effect" style="width: 6%; font-size: 12px;">Type</th>
+                                            <th class="text-effect" style="width: 8%; font-size: 12px;">Med.Amt</th>
+                                            <th class="text-effect" style="width: 8%; font-size: 12px;">Amount</th>
+                                            <th class="text-effect" style="width: 7%; font-size: 12px;">Rate</th>
+                                            <th class="text-effect" style="width: 8%; font-size: 12px;">Rebate</th>
+                                            <th class="text-effect" style="width: 15%; font-size: 12px;">Remark</th>
+                                            <th class="text-effect" style="width: 6%; font-size: 12px;">Bill</th>
+                                            <th class="text-effect" style="width: 7%; font-size: 12px;">Action</th>
                                         </tr>
                                     </thead>
 
@@ -179,18 +282,18 @@
                                     </tbody>
                                     <tfoot class="dataTables_scrollHead">
                                         <tr>
-                                            <th class="text-effect" style="width: 40px; font-size: 12px;">Sr.</th>
-                                            <th class="text-effect" style="width: 70px; font-size: 12px;">Date</th>
-                                            <th class="text-effect" style="width: 80px; font-size: 12px;">Medicine</th>
-                                            <th class="text-effect" style="width: 75px; font-size: 12px;">Ledger</th>
-                                            <th class="text-effect" style="width: 50px; font-size: 12px;">Type</th>
-                                            <th class="text-effect" style="width: 65px; font-size: 12px;">Med. Amt</th>
-                                            <th class="text-effect" style="width: 60px; font-size: 12px;">Amount</th>
-                                            <th class="text-effect" style="width: 50px; font-size: 12px;">Rate</th>
-                                            <th class="text-effect" style="width: 55px; font-size: 12px;">Rebate</th>
-                                            <th class="text-effect" style="width: 90px; font-size: 12px;">Remark</th>
-                                            <th class="text-effect" style="width: 50px; font-size: 12px;">Bill</th>
-                                            <th class="text-effect" style="width: 70px; font-size: 12px;">Action</th>
+                                            <th class="text-effect" style="width: 5%; font-size: 12px;">Sr.</th>
+                                            <th class="text-effect" style="width: 8%; font-size: 12px;">Date</th>
+                                            <th class="text-effect" style="width: 12%; font-size: 12px;">Medicine</th>
+                                            <th class="text-effect" style="width: 10%; font-size: 12px;">Ledger</th>
+                                            <th class="text-effect" style="width: 6%; font-size: 12px;">Type</th>
+                                            <th class="text-effect" style="width: 8%; font-size: 12px;">Med.Amt</th>
+                                            <th class="text-effect" style="width: 8%; font-size: 12px;">Amount</th>
+                                            <th class="text-effect" style="width: 7%; font-size: 12px;">Rate</th>
+                                            <th class="text-effect" style="width: 8%; font-size: 12px;">Rebate</th>
+                                            <th class="text-effect" style="width: 15%; font-size: 12px;">Remark</th>
+                                            <th class="text-effect" style="width: 6%; font-size: 12px;">Bill</th>
+                                            <th class="text-effect" style="width: 7%; font-size: 12px;">Action</th>
                                         </tr>
                                     </tfoot>
                                 </table>
