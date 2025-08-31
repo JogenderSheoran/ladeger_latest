@@ -418,13 +418,13 @@ class VoucherController extends Controller
                                                     dene
                                                 </span>';
 
-            // Bill status with proper icons
+            // Bill status with proper colored buttons
             $billLabel = $value->bill_status == 0 
-                ? '<span class="btn btn-xs" style="color: #f39c12;">
-                    <i class="fa fa-clock-o"></i> <strong>PENDING</strong>
+                ? '<span class="btn btn-xs btn-danger" style="background-color: #dc3545; color: white; border: none; font-size: 10px; padding: 2px 6px;">
+                    <i class="fa fa-clock-o"></i> PENDING
                    </span>'
-                : '<span class="btn btn-xs" style="color: #27ae60;">
-                    <i class="fa fa-check-circle"></i> <strong>GENERATED</strong>
+                : '<span class="btn btn-xs btn-success" style="background-color: #28a745; color: white; border: none; font-size: 10px; padding: 2px 6px;">
+                    <i class="fa fa-check-circle"></i> GENERATED
                    </span>';
 
             // Check if transaction is deleted

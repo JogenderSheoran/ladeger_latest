@@ -196,5 +196,15 @@ class shiftController extends Controller
             return response()->json(['status' => 'success', 'data' => $data]);
         }
     }
+
+    public function getLedgerById(Request $request){
+        $data = ledger::where('id', $request->id)->where('admin_id', Auth::user()->id)->first();
+
+        if(!$data) {
+            return response()->json(['status' => 'error', 'message' => 'Ledger not found']);
+        } else {
+            return response()->json(['status' => 'success', 'data' => $data]);
+        }
+    }
     
 }

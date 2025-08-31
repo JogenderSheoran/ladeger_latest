@@ -72,6 +72,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('search_admin_data',[shiftController::class,'search_admin_data'])->name('search_admin_data');
         Route::post('search_punter_data',[shiftController::class,'search_punter_data'])->name('search_punter_data');
         Route::post('get_ledger_medicine',[shiftController::class,'getLedgerMedicine'])->name('getLedgerMedicine');
+        Route::post('get_ledger_by_id',[shiftController::class,'getLedgerById'])->name('getLedgerById');
 
     //Voucher routes
     Route::get('journal-voucher',[VoucherController::class,'journal_voucher'])->name('journal_voucher');

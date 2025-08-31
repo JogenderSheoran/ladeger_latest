@@ -262,6 +262,69 @@
                                 </div>
                             </div>
 
+                            <!-- Edit Ledger Modal -->
+                            <div class="modal fade bs-modal-sm" id="editShift" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header model_custom_header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title"><b>Edit Ledger</b></h4>
+                                        </div>
+                                        <form method="POST" action="{{ route('submit_ledger') }}" id="edit_ledger_form">
+                                            {{ csrf_field() }}
+                                            <input type="hidden" name="id" id="edit_id" value="">
+                                            <input type="hidden" name="user_id" id="edit_Wid" value="{{ Auth::user()->id }}">
+                                            <input type="hidden" name="updated_by" id="edit_updatedBy" value="{{ Auth::user()->company }}">
+                                            <div class="modal-body">
+                                                <div class="portlet-body">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="row">
+                                                                <div class="col-md-4">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label ledger-font">Ledger Name</label>
+                                                                        <input type="text" autocomplete="off" name="name" id="edit_name" required class="form-control input" />
+                                                                        <div id="edit-name-error" class="text-danger" style="display: none; margin-top: 5px; font-size: 12px;"></div>
+                                                                        <div id="edit-name-success" class="text-success" style="display: none; margin-top: 5px; font-size: 12px;"></div>
+                                                                    </div>
+                                                                </div>
+                                                                <input type="hidden" id="edit_admin_id" name="admin_id" value="{{ Auth::user()->id }}">
+                                                                <div class="col-md-4">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label ledger-font">Real Name</label>
+                                                                        <input type="text" autocomplete="off" name="username" id="edit_username" class="form-control input" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label ledger-font">Grantor Name</label>
+                                                                        <input type="text" autocomplete="off" name="grantor_name" id="edit_grantor_name" class="form-control input" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label ledger-font">Mobile</label>
+                                                                        <input type="number" autocomplete="off" name="mobile" id="edit_mobile" class="form-control input" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="edit_field_wrapper">
+                                                                <!-- Medicine fields will be populated here -->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" id="edit_save" class="btn btn-success">Update</button>
+                                                <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
+                                                <button style="display:none;" id="edit_wait" class="btn btn-warning"><i class="icon-spinner"></i> Please Wait...</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
 <!--Add shift modal -->
                         </div>
                     </div>
@@ -432,7 +495,13 @@ $("#search").click(function(){
     });
 
     $('#addShift').on('hidden.bs.modal', function () {
-        location.reload(); 
+        // Clear form when modal is closed instead of refreshing page
+        $('#ledger_form')[0].reset();
+        $('.field_wrapper').empty();
+        // Clear validation states
+        $('#name-error').hide();
+        $('#name-success').hide();
+        $('#name').removeClass('is-invalid');
     });
 
     // Add Shift
@@ -802,22 +871,22 @@ function isNumberKey(evt){
 </script>
 <script>
 
- $('#search_ledger').keyup(function(){ 
-        var query = $(this).val();
-        if(query != '')
-        {
-         var _token = $('input[name="_token"]').val();
-         $.ajax({
-          url: `${window.pageData.baseUrl}/api/autocompelete_ledger`,
-          method:"POST",
-          data:{name:query,admin_id:$("#admin_id").val(),_token:_token},
-          success:function(data){
-            $('#searchList').fadeIn();  
-            $('#searchList').html(data.data);
-          }
-         });
-        }
-    });
+//  $('#search_ledger').keyup(function(){ 
+//         var query = $(this).val();
+//         if(query != '')
+//         {
+//          var _token = $('input[name="_token"]').val();
+//          $.ajax({
+//           url: `${window.pageData.baseUrl}/api/autocompelete_ledger`,
+//           method:"POST",
+//           data:{name:query,admin_id:$("#admin_id").val(),_token:_token},
+//           success:function(data){
+//             $('#searchList').fadeIn();  
+//             $('#searchList').html(data.data);
+//           }
+//          });
+//         }
+//     });
 
     $(document).on('click', 'li', function(){  
         $('#search_ledger').val($(this).text());  
@@ -915,21 +984,150 @@ function isNumberKey(evt){
 </script>
 <script>
 function editShift(id) {
-    $("#model_title").text("Edit Ledger").css({ 'font-weight': 'bold' });
-    var ids = "#row" + id;
-    var currentRow = $(ids).closest("tr");
-    var idVal = id;
-    var name = currentRow.find("td:eq(1)").text();
-    var username = currentRow.find("td:eq(3)").text();
-    var grantorName = currentRow.find("td:eq(4)").text();
-    var mobile = currentRow.find("td:eq(5)").text();
+    // Clear the edit modal fields and form
+    $('.edit_field_wrapper').empty();
+    $('#edit_ledger_form')[0].reset();
+    
+    // First, fetch the ledger data from server to ensure we get correct data
+    $.ajax({
+        type: "POST",
+        url: "{{ route('getLedgerById') }}",
+        data: { 'id': id, "_token": "{{ csrf_token() }}" },
+        success: function(response) {
+            if(response.status === 'success') {
+                var ledgerData = response.data;
+                
+                console.log('Received ledger data:', ledgerData);
+                
+                // Set values in the EDIT modal fields (with edit_ prefix)
+                $("#edit_id").val(id);
+                $("#edit_name").val(ledgerData.name || '');
+                $("#edit_username").val(ledgerData.username || '');
+                $("#edit_grantor_name").val(ledgerData.grantor || '');
+                $("#edit_mobile").val(ledgerData.mobile || '');
+                
+                // Verify the values were set
+                console.log('Setting Name:', ledgerData.name);
+                console.log('Edit Name field after setting:', $("#edit_name").val());
+                console.log('Setting Username:', ledgerData.username);
+                console.log('Edit Username field after setting:', $("#edit_username").val());
+                
+                // Now fetch medicine data for edit modal
+                fetchEditMedicineData(id);
+            } else {
+                console.error("Error fetching ledger data:", response.message);
+                toastr.error('Error loading ledger data', 'Error');
+                // Still show edit modal even if ledger data fails, but with empty fields
+                $('#editShift').modal('show');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error("AJAX Error:", xhr.responseText);
+            toastr.error('Error loading ledger data', 'Error');
+            // Show edit modal even on error
+            $('#editShift').modal('show');
+        }
+    });
+}
 
-    // Set values in form inputs
-    $("#id").val(idVal);
-    $("#name").val(name);
-    $("#username").val(username);
-    $("#grantor_name").val(grantorName);
-    $("#mobile").val(mobile);
+function fetchEditMedicineData(id) {
+    $.ajax({
+        type: "POST",
+        url: "{{ route('getLedgerMedicine') }}",
+        data: { 'id': id, "_token": "{{ csrf_token() }}" },
+        success: function(response) {
+            if(response.status === 'success') {
+                var medicineList = response.data;
+                var fieldWrapper = $(".edit_field_wrapper");
+                fieldWrapper.empty(); // Clear previous fields
+                
+                if (medicineList.length === 0) {
+                    // No medicine returned, show one empty row with add button
+                    var emptyHtml = '<div class="row">' +
+                        '<div class="col-md-3">' +
+                        '<div class="form-group">' +
+                        '<label class="control-label ledger-font">Medicine Name</label>' +
+                        '<input type="text" autocomplete="off" name="medicine_name[]" class="form-control input" value=""  />' +
+                        '</div>' +
+                        '</div>' +
+                        '<div class="col-md-3">' +
+                        '<div class="form-group">' +
+                        '<label class="control-label ledger-font">Rate</label>' +
+                        '<input type="text" autocomplete="off" name="medicine_rate[]" class="form-control input numeric-only" value=""  />' +
+                        '</div>' +
+                        '</div>' +
+                        '<div class="col-md-3">' +
+                        '<div class="form-group">' +
+                        '<label class="control-label ledger-font">Rebate</label>' +
+                        '<input type="text" autocomplete="off" name="medicine_rebate[]" class="form-control input numeric-only" value=""  />' +
+                        '</div>' +
+                        '</div>' +
+                        '<div class="col-md-3" style="margin-top:25px;">' +
+                        '<a href="javascript:void(0);" class="add_button_md" title="Add field"><i class="fa fa-plus"></i></a>' +
+                        '</div>' +
+                        '</div>'; // Closing row div
+                    
+                    fieldWrapper.append(emptyHtml);
+                } else {
+                    // Loop through medicine list and populate fields
+                    $.each(medicineList, function(index, medicine) {
+                        var html = '<div class="row">' +
+                            '<div class="col-md-3">' +
+                            '<div class="form-group">' +
+                            '<label class="control-label ledger-font">Medicine Name</label>' +
+                            '<input type="text" autocomplete="off" name="medicine_name[]" class="form-control input" value="' + medicine.medicine_name + '" required />' +
+                            '</div>' +
+                            '</div>' +
+                            '<div class="col-md-3">' +
+                            '<div class="form-group">' +
+                            '<label class="control-label ledger-font">Rate</label>' +
+                            '<input type="text" autocomplete="off" name="medicine_rate[]" class="form-control input numeric-only" value="' + medicine.medicine_rate + '" required />' +
+                            '</div>' +
+                            '</div>' +
+                            '<div class="col-md-3">' +
+                            '<div class="form-group">' +
+                            '<label class="control-label ledger-font">Rebate</label>' +
+                            '<input type="text" autocomplete="off" name="medicine_rebate[]" class="form-control input numeric-only" value="' + medicine.medicine_rebate + '" required />' +
+                            '</div>' +
+                            '</div>';
+
+                        // Check if it's the first item
+                        if (index === 0) {
+                            html += '<div class="col-md-3" style="margin-top:25px;">' +
+                                '<a href="javascript:void(0);" class="add_button_md" title="Add field"><i class="fa fa-plus"></i></a>' +
+                                '</div>';
+                        } else {
+                            html += '<div class="col-md-3" style="margin-top:25px;">' +
+                                        '<a href="javascript:void(0);" class="add_button_md" title="Add field">' +
+                                            '<i class="fa fa-plus"></i>' +
+                                        '</a>&nbsp;&nbsp;' +
+                                        '<a href="javascript:void(0);" class="remove_button_md" title="Remove field">' +
+                                            '<i class="fa fa-minus"></i>' +
+                                        '</a>' +
+                                    '</div>';
+                        }
+
+                        html += '</div>'; // Closing row div
+                        
+                        fieldWrapper.append(html);
+                        $('.edit_field_wrapper .row:last-child input[name="medicine_name[]"]').focus();
+                    });
+                }
+
+                $('#editShift').modal('show');
+            } else {
+                console.error("Error fetching medicine list:", response.message);
+                $('#editShift').modal('show');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error(xhr.responseText);
+            $('#editShift').modal('show');
+        }
+    });
+}
+
+function fetchMedicineData(id) {
     $.ajax({
     type: "POST",
     url: "{{ route('getLedgerMedicine') }}",
@@ -997,18 +1195,16 @@ function editShift(id) {
                             '</div>';
                     } else {
                         html += '<div class="col-md-3" style="margin-top:25px;">' +
-                                   
                                     '<a href="javascript:void(0);" class="add_button_md" title="Add field">' +
                                         '<i class="fa fa-plus"></i>' +
                                     '</a>&nbsp;&nbsp;' +
                                     '<a href="javascript:void(0);" class="remove_button_md" title="Remove field">' +
                                         '<i class="fa fa-minus"></i>' +
                                     '</a>' +
-                                '</div>;'
+                                '</div>';
                     }
 
-                    html += '</div>' + // Closing row div
-                        '</div>'; // Closing container div
+                    html += '</div>'; // Closing row div
 
                     
                     fieldWrapper.append(html);
@@ -1041,7 +1237,7 @@ $('#save').keypress((e) => {
  </script>
  <script>
 $(document).ready(function(){
-    // Bind click event for adding fields
+    // Bind click event for adding fields (Add Modal)
     $('.field_wrapper').on('click', '.add_button_md', function(){
         var x = $('.field_wrapper .row').length + 1; // Increment field counter
         var maxField = 30; // Maximum number of fields
@@ -1070,7 +1266,7 @@ $(document).ready(function(){
                 '<div class="col-md-3" style="margin-top:25px;">' +
                 '<a href="javascript:void(0);" class="add_button_md" title="Add field">' +
                                         '<i class="fa fa-plus"></i>' +
-                                    '</a>&nbsp;&nbsp;<a href="javascript:void(0);" class="remove_button_md" title="Add field"><i class="fa fa-minus"></i></a>'+
+                                    '</a>&nbsp;&nbsp;<a href="javascript:void(0);" class="remove_button_md" title="Remove field"><i class="fa fa-minus"></i></a>'+
                 '</div>' +
                 '</div>';
 
@@ -1082,8 +1278,54 @@ $(document).ready(function(){
         }
     });
 
-    // Bind click event for removing fields
+    // Bind click event for removing fields (Add Modal)
     $('.field_wrapper').on('click', '.remove_button_md', function(){
+        $(this).closest('.row').remove(); // Remove the closest row when remove button is clicked
+    });
+
+    // Bind click event for adding fields (Edit Modal)
+    $('.edit_field_wrapper').on('click', '.add_button_md', function(){
+        var x = $('.edit_field_wrapper .row').length + 1; // Increment field counter
+        var maxField = 30; // Maximum number of fields
+
+        // Check if the maximum number of fields has been reached
+        if(x <= maxField){ 
+            var fieldHTML = '<div class="row">' +
+                '<div class="col-md-3">' +
+                '<div class="form-group">' +
+                '<label class="control-label ledger-font">Medicine Name</label>' +
+                '<input type="text" autocomplete="off" name="medicine_name[]" class="form-control input" value=""  />' +
+                '</div>' +
+                '</div>' +
+                '<div class="col-md-3">' +
+                '<div class="form-group">' +
+                '<label class="control-label ledger-font">Rate</label>' +
+                '<input type="text" autocomplete="off" name="medicine_rate[]" class="form-control input numeric-only" value=""  />' +
+                '</div>' +
+                '</div>' +
+                '<div class="col-md-3">' +
+                '<div class="form-group">' +
+                '<label class="control-label ledger-font">Rebate</label>' +
+                '<input type="text" autocomplete="off" name="medicine_rebate[]" class="form-control input numeric-only" value=""  />' +
+                '</div>' +
+                '</div>' +
+                '<div class="col-md-3" style="margin-top:25px;">' +
+                '<a href="javascript:void(0);" class="add_button_md" title="Add field">' +
+                                        '<i class="fa fa-plus"></i>' +
+                                    '</a>&nbsp;&nbsp;<a href="javascript:void(0);" class="remove_button_md" title="Remove field"><i class="fa fa-minus"></i></a>'+
+                '</div>' +
+                '</div>';
+
+            // Append the new field HTML to the wrapper
+            $('.edit_field_wrapper').append(fieldHTML);
+            $('.edit_field_wrapper .row:last-child input[name="medicine_name[]"]').focus();
+        } else {
+            alert('A maximum of '+maxField+' fields are allowed to be added.');
+        }
+    });
+
+    // Bind click event for removing fields (Edit Modal)
+    $('.edit_field_wrapper').on('click', '.remove_button_md', function(){
         $(this).closest('.row').remove(); // Remove the closest row when remove button is clicked
     });
 });
@@ -1166,7 +1408,7 @@ function removeDiv(id){
         });
     }
 
-    // AJAX validation for ledger name uniqueness
+    // AJAX validation for ledger name uniqueness (Add Modal)
     function checkLedgerName() {
         var name = $('#name').val().trim();
         var id = $('#id').val(); // For edit mode
@@ -1203,8 +1445,46 @@ function removeDiv(id){
         });
     }
 
+    // AJAX validation for ledger name uniqueness (Edit Modal)
+    function checkEditLedgerName() {
+        var name = $('#edit_name').val().trim();
+        var id = $('#edit_id').val(); // For edit mode
+        
+        if(name === '') {
+            $('#edit-name-error').hide();
+            $('#edit-name-success').hide();
+            return;
+        }
+        
+        $.ajax({
+            url: "{{ route('check_ledger_name') }}",
+            type: 'POST',
+            data: {
+                name: name,
+                id: id,
+                _token: "{{ csrf_token() }}"
+            },
+            success: function(response) {
+                if(response.status === 'error') {
+                    $('#edit-name-error').text(response.message).show();
+                    $('#edit-name-success').hide();
+                    $('#edit_name').addClass('is-invalid');
+                } else {
+                    $('#edit-name-success').text(response.message).show();
+                    $('#edit-name-error').hide();
+                    $('#edit_name').removeClass('is-invalid');
+                }
+            },
+            error: function(xhr, status, error) {
+                $('#edit-name-error').text('Error checking ledger name. Please try again.').show();
+                $('#edit-name-success').hide();
+            }
+        });
+    }
+
     // Bind the validation to name input field
     $(document).ready(function() {
+        // Add modal validation
         $('#name').on('blur keyup', function() {
             var name = $(this).val().trim();
             if(name.length >= 2) {
@@ -1212,9 +1492,26 @@ function removeDiv(id){
             }
         });
         
-        // Prevent form submission if ledger name already exists
+        // Edit modal validation
+        $('#edit_name').on('blur keyup', function() {
+            var name = $(this).val().trim();
+            if(name.length >= 2) {
+                setTimeout(checkEditLedgerName, 500); // Delay to avoid too many requests
+            }
+        });
+        
+        // Prevent form submission if ledger name already exists (Add Modal)
         $('#ledger_form').on('submit', function(e) {
             if($('#name-error').is(':visible')) {
+                e.preventDefault();
+                alert('Please fix the ledger name error before submitting.');
+                return false;
+            }
+        });
+        
+        // Prevent form submission if ledger name already exists (Edit Modal)
+        $('#edit_ledger_form').on('submit', function(e) {
+            if($('#edit-name-error').is(':visible')) {
                 e.preventDefault();
                 alert('Please fix the ledger name error before submitting.');
                 return false;

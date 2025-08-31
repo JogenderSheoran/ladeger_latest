@@ -229,9 +229,8 @@
                                             
                                             <div class="col-md-1 col-sm-6 col-xs-12">
                                                 <div class="btn-group" style="width: 100%;">
-                                                    <button type="submit" id="save" class="btn" style="background: linear-gradient(45deg, #007bff 0%, #4dabf7 100%); color: white; font-weight: bold; border: 2px solid #0056b3; box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3); border-radius: 8px; padding: 8px 20px; transition: all 0.3s ease; width: 100%;">Save</button>
-                                                    <button style="display:none;" id="wait" class="btn" style="background: linear-gradient(45deg, #ffc107 0%, #ffeb3b 100%); color: #212529; font-weight: bold; border: 2px solid #e0a800; box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3); border-radius: 8px; padding: 8px 20px; width: 100%;"><i
-                                                            class="icon-spinner"></i>Please Wait...</button>
+                                                    <button type="submit" id="save" class="btn btn-success" style="width: 100%; padding: 6px 12px; font-size: 12px;">Save</button>
+                                                    <button style="display:none;" id="wait" class="btn btn-warning" style="width: 100%; padding: 6px 12px; font-size: 12px;"><i class="icon-spinner"></i>Please Wait...</button>
                                                 </div>
                                             </div>
                                         </div>
