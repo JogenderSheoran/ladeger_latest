@@ -15,90 +15,10 @@
         min-width: 193px;
     }
     @media only screen and (max-width: 600px) {
-        .mobile{
-            width:45% !important
-        }
-        
-        .btn-group {
-            margin-bottom: 5px;
-        }
-        
-        .portlet-title .col-md-12 {
-            padding: 0 5px;
-        }
-        
-        .form-control-inline {
-            font-size: 12px;
-        }
-        
-        .container-fluid {
-            padding: 0 10px !important;
-        }
-    }
-    
-    @media only screen and (max-width: 768px) {
-        .table-responsive-custom {
-            overflow: hidden;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            width: 100%;
-        }
-        
-        .table-responsive-custom table {
-            width: 100% !important;
-            margin-bottom: 0;
-            table-layout: auto;
-        }
-        
-        .btn-group {
-            flex-wrap: wrap;
-        }
-        
-        .d-flex {
-            flex-wrap: wrap;
-            justify-content: center !important;
-        }
-        
-        .d-flex .btn {
-            margin: 1px;
-            font-size: 8px !important;
-            padding: 2px 4px !important;
-        }
-        
-        .table th, .table td {
-            font-size: 7px !important;
-            padding: 2px 1px !important;
-            text-align: center;
-            word-wrap: break-word;
-            max-width: 60px;
-        }
-        
-        .table th {
-            font-size: 8px !important;
-            font-weight: bold;
-        }
-        
-        .row {
-            margin-left: -2px;
-            margin-right: -2px;
-        }
-        
-        .row > [class*="col-"] {
-            padding-left: 2px;
-            padding-right: 2px;
-            margin-bottom: 3px;
-        }
-        
-        .form-control {
-            font-size: 10px !important;
-            padding: 3px !important;
-        }
-        
-        .btn {
-            font-size: 9px !important;
-            padding: 3px 6px !important;
-        }
-    }
+    .mobile{
+        width:45% !important
+    }  
+}
 </style>
 <style>
     .dataTables_filter {
@@ -135,7 +55,7 @@
     <!-- BEGIN CONTENT BODY -->
     <!-- BEGIN PAGE CONTENT BODY -->
     <div class="page-content">
-        <div class="container-fluid" style="max-width: 95%; padding: 0 20px;">
+        <div class="container">
 
             <!-- BEGIN PAGE BREADCRUMBS -->
             <ul class="page-breadcrumb breadcrumb">
@@ -261,27 +181,27 @@
                                 <table class="table table-bordered" id="mytable" style="width: 100%;">
                                     <thead>
                                         <tr>
-                                            <th class="text-effect" style="width: 5%; font-size: 12px;">Sr.</th>
-                                            <th class="text-effect" style="width: 8%; font-size: 12px;">Date</th>
-                                            <th class="text-effect" style="width: 12%; font-size: 12px;">Medicine</th>
-                                            <th class="text-effect" style="width: 10%; font-size: 12px;">Ledger</th>
-                                            <th class="text-effect" style="width: 6%; font-size: 12px;">Type</th>
-                                            <th class="text-effect" style="width: 8%; font-size: 12px;">Med.Amt</th>
-                                            <th class="text-effect" style="width: 8%; font-size: 12px;">Amount</th>
-                                            <th class="text-effect" style="width: 7%; font-size: 12px;">Rate</th>
-                                            <th class="text-effect" style="width: 8%; font-size: 12px;">Rebate</th>
-                                            <th class="text-effect" style="width: 15%; font-size: 12px;">Remark</th>
-                                            <th class="text-effect" style="width: 6%; font-size: 12px;">Bill</th>
-                                            <th class="text-effect" style="width: 7%; font-size: 12px;">Action</th>
+                                            <th class="text-effect" style="width: 5%; font-size: 13px;">Sr.</th>
+                                            <th class="text-effect" style="width: 8%; font-size: 13px;">Date</th>
+                                            <th class="text-effect" style="width: 12%; font-size: 13px;">Medicine</th>
+                                            <th class="text-effect" style="width: 10%; font-size: 13px;">Ledger</th>
+                                            <th class="text-effect" style="width: 6%; font-size: 13px;">Type</th>
+                                            <th class="text-effect" style="width: 8%; font-size: 13px;">Med.Amt</th>
+                                            <th class="text-effect" style="width: 8%; font-size: 13px;">Amount</th>
+                                            <th class="text-effect" style="width: 7%; font-size: 13px;">Rate</th>
+                                            <th class="text-effect" style="width: 8%; font-size: 13px;">Rebate</th>
+                                            <th class="text-effect" style="width: 15%; font-size: 13px;">Remark</th>
+                                            <th class="text-effect" style="width: 6%; font-size: 13px;">Bill</th>
+                                            <th class="text-effect" style="width: 7%; font-size: 13px;">Action</th>
                                         </tr>
                                     </thead>
 
                                     <tbody class="text-effect" id="table_body">
                                         <!-- Data will be loaded via AJAX -->
                                     </tbody>
-                                    <tfoot class="dataTables_scrollHead">
+                                    <tfoot class="dataTables_scrollHead">   
                                         <tr>
-                                            <th class="text-effect" style="width: 5%; font-size: 12px;">Sr.</th>
+                                            <th class="text-effect" style="width: 5%; font-size: 13px;">Sr.</th>
                                             <th class="text-effect" style="width: 8%; font-size: 12px;">Date</th>
                                             <th class="text-effect" style="width: 12%; font-size: 12px;">Medicine</th>
                                             <th class="text-effect" style="width: 10%; font-size: 12px;">Ledger</th>
@@ -764,8 +684,25 @@
             cache: false,
             success: function (data) {
                 if (data.type == 1 || data.status == true) {
-                    window.location.reload();
+                    // Instead of full page reload, just refresh DataTable and summary
+                    $('#mytable').DataTable().ajax.reload(null, false); // false = keep current page
+                    
+                    // Add a small delay to ensure the transaction is saved before fetching totals
+                    setTimeout(function() {
+                        console.log('Calling refreshSummaryTotals after transaction...');
+                        refreshSummaryTotals(); // Update the summary buttons
+                    }, 500);
+                    
                     toastr.success(data.message, 'success');
+                    
+                    // Clear the form for next entry
+                    $('#add_journal_voucher')[0].reset();
+                    $("#party_balance").val('');
+                    $("#medicine_name").val('');
+                    $("#amount").val('');
+                    $("#rate").val('');
+                    $("#rebate").val('');
+                    $("#remark").val('');
                 } else {
                     toastr.error(data.message, 'Error');
                     $("#party_balance").val('');
@@ -1187,25 +1124,37 @@ $('#edit_journal_voucher').submit(function (e) {
             type: "GET",
             url: "{{ route('getMedicineTotals') }}",
             success: function(response) {
+                console.log('Summary totals response:', response); // Debug log
                 if (response.status === 'success') {
                     // Update Plus button
-                    $('#plusBtn').html('<i class="fa fa-plus-circle"></i> <strong>Plus: + ' + response.total_plus + '</strong>');
+                    $('#plusBtn').html('<i class="fa fa-plus-circle"></i> <strong>Plus: + ' + response.total_plus.toFixed(2) + '</strong>');
                     
                     // Update Minus button
-                    $('#minusBtn').html('<i class="fa fa-minus-circle"></i> <strong>Minus: - ' + response.total_minus + '</strong>');
+                    $('#minusBtn').html('<i class="fa fa-minus-circle"></i> <strong>Minus: - ' + response.total_minus.toFixed(2) + '</strong>');
                     
                     // Update Total button with conditional styling
                     var totalBtnStyle = response.total <= 0 
-                        ? 'background: linear-gradient(45deg,rgb(241, 6, 61) 0%,rgb(223, 42, 10) 100%); color: white; font-weight: bold; border: none; box-shadow: 0 4px 15px rgba(255, 65, 108, 0.4); border-radius: 20px; padding: 10px 25px; margin: 5px;'
-                        : 'background: linear-gradient(45deg,rgb(49, 143, 6) 0%,rgb(10, 121, 80) 100%); color: white; font-weight: bold; border: none; box-shadow: 0 4px 15px rgba(86, 171, 47, 0.4); border-radius: 20px; padding: 10px 25px; margin: 5px;';
+                        ? 'background: linear-gradient(45deg,rgb(241, 6, 61) 0%,rgb(223, 42, 10) 100%); color: white; font-weight: bold; border: 1px solid #721c24; box-shadow: 0 2px 8px rgba(189, 33, 48, 0.3); border-radius: 15px; padding: 6px 15px; margin: 3px; transition: all 0.3s ease; font-size: 12px;'
+                        : 'background: linear-gradient(45deg,rgb(49, 143, 6) 0%,rgb(10, 121, 80) 100%); color: white; font-weight: bold; border: 1px solid #155724; box-shadow: 0 2px 8px rgba(30, 126, 52, 0.3); border-radius: 15px; padding: 6px 15px; margin: 3px; transition: all 0.3s ease; font-size: 12px;';
                     
-                    $('#totalBtn').attr('style', totalBtnStyle).html('<i class="fa fa-calculator"></i> <strong>Total: ' + response.total + '</strong>');
+                    $('#totalBtn').attr('style', totalBtnStyle).html('<i class="fa fa-calculator"></i> <strong>Total: ' + response.total.toFixed(2) + '</strong>');
+                    
+                    console.log('Summary buttons updated successfully'); // Debug log
+                } else {
+                    console.error('Error in response:', response);
                 }
             },
             error: function(xhr, status, error) {
                 console.error('Error refreshing totals: ' + error);
+                console.error('XHR:', xhr);
             }
         });
+    }
+
+    // Test function to manually refresh totals (for debugging)
+    function testRefreshTotals() {
+        console.log('Manual test: Refreshing summary totals...');
+        refreshSummaryTotals();
     }
 
     function showTransactionDetails (ledgerId) {
@@ -1265,10 +1214,30 @@ $('#edit_journal_voucher').submit(function (e) {
                 $('#totalPlus').text(response.totals.totalPlus.toFixed(2));
                 $('#totalMinus').text(response.totals.totalMinus.toFixed(2));
                 $('#totalAmount').text(response.totals.totalAmount.toFixed(2));
+                
+                // Apply conditional styling to both net amount and bill generation buttons
                 if (response.totals.totalAmount >= 0) {
-                    $('#totalAmountButton').css('background-color', 'green');  // Set green background for positive amount
+                    // Positive amount - Green styling for Net Amount
+                    $('#totalAmountButton').css({
+                        'background': 'linear-gradient(45deg,rgb(21, 158, 9) 0%,rgb(12, 192, 36) 100%)',
+                        'box-shadow': '0 4px 15px rgba(26, 177, 20, 0.4)'
+                    });
+                    // Positive amount - Blue styling for Generate Bill
+                    $('#generateBillButton').css({
+                        'background': 'linear-gradient(45deg,rgb(26, 177, 20) 0%,rgb(12, 192, 36) 100%)',
+                        'box-shadow': '0 4px 15px rgba(26, 177, 20, 0.4)'
+                    });
                 } else {
-                    $('#totalAmountButton').css('background-color', 'red');    // Set red background for negative amount
+                    // Negative amount - Red styling for Net Amount
+                    $('#totalAmountButton').css({
+                        'background': 'linear-gradient(45deg,rgb(241, 6, 61) 0%,rgb(223, 42, 10) 100%)',
+                        'box-shadow': '0 4px 15px rgba(255, 65, 108, 0.4)'
+                    });
+                    // Negative amount - Orange styling for Generate Bill
+                    $('#generateBillButton').css({
+                        'background': 'linear-gradient(45deg,   rgb(241, 6, 61) 0%,rgb(223, 42, 10) 100%)',
+                        'box-shadow': '0 4px 15px rgba(255, 154, 86, 0.4)'
+                    });
                 }
 
                 if (response.totals.totalAmount >= 0) {

@@ -418,14 +418,34 @@ class VoucherController extends Controller
                                                     dene
                                                 </span>';
 
-            // Bill status with proper colored buttons
-            $billLabel = $value->bill_status == 0 
-                ? '<span class="btn btn-xs btn-danger" style="background-color: #dc3545; color: white; border: none; font-size: 10px; padding: 2px 6px;">
-                    <i class="fa fa-clock-o"></i> PENDING
-                   </span>'
-                : '<span class="btn btn-xs btn-success" style="background-color: #28a745; color: white; border: none; font-size: 10px; padding: 2px 6px;">
-                    <i class="fa fa-check-circle"></i> GENERATED
-                   </span>';
+            // // Bill status with proper colored buttons
+            // $billLabel = $value->bill_status == 0 
+            //     ? '<span class="btn btn-xs btn-danger" style="background-color: #dc3545; color: white; border: none; font-size: 10px; padding: 2px 6px;">
+            //         <i class="fa fa-clock-o"></i> PENDING
+            //        </span>'
+            //     : '<span class="btn btn-xs btn-success" style="background-color: #28a745; color: white; border: none; font-size: 10px; padding: 2px 6px;">
+            //         <i class="fa fa-check-circle"></i> GENERATED
+            //        </span>';
+
+            $style="";
+            if($value->bill_status==0){
+                $style="background-color:red";
+            }
+            else{
+                $style="background-color:green";
+            }
+
+            $val = "";
+            if($value->bill_status==0){
+                $val="Generate Bill";
+            }
+            else{
+                $val="Bill Generated";
+            }
+            
+            $billLabel='<span class="label label-sm label-success label-mini btn cr_dr  sbold" style="'.$style.'">
+                  '.$val.'
+               </span>';
 
             // Check if transaction is deleted
             $isDeleted = isset($value->is_deleted) && $value->is_deleted == 1;
@@ -572,34 +592,29 @@ class VoucherController extends Controller
     public function getMedicineTotals(Request $request)
 {
     try {
-        // Timezone dhyaan rahe: config/app.php -> 'timezone' => 'Asia/Kolkata'
-        $start = Carbon::today()->subDays(2)->toDateString(); // aaj - 2 din
-        $end   = Carbon::today()->toDateString();             // aaj
+        $today = Carbon::today()->toDateString();
 
-        $base = MedicineTransaction::where('admin_id', Auth::id())
-            ->whereBetween('date', [$start, $end])
-            ->where(function($q){
-                $q->where('is_deleted', '!=', 1)->orWhereNull('is_deleted');
-            });
+        // Use the same logic as medicine_transaction method for consistency
+        // Get total plus transactions for today
+        $total_plus = MedicineTransaction::where('admin_id', Auth::user()->id)
+            ->where('date', $today)
+            ->where('type', 'plus')
+            ->sum('medicine_amount');
 
-        // Single query me plus/minus totals nikaal lo
-        $totals = (clone $base)
-            ->selectRaw("
-                COALESCE(SUM(CASE WHEN type = 'plus'  THEN medicine_amount ELSE 0 END),0)  AS total_plus,
-                COALESCE(SUM(CASE WHEN type = 'minus' THEN medicine_amount ELSE 0 END),0)  AS total_minus
-            ")
-            ->first();
+        // Get total minus transactions for today
+        $total_minus = MedicineTransaction::where('admin_id', Auth::user()->id)
+            ->where('date', $today)
+            ->where('type', 'minus')
+            ->sum('medicine_amount');
 
-        $totalPlus  = (float) ($totals->total_plus  ?? 0);
-        $totalMinus = (float) ($totals->total_minus ?? 0);
-        $total      = $totalPlus - $totalMinus;
+        $total = $total_plus - $total_minus;
 
         return response()->json([
             'status'       => 'success',
-            'range'        => ['from' => $start, 'to' => $end], // info: kaunse 3 din cover hue
-            'total_plus'   => $totalPlus,
-            'total_minus'  => $totalMinus,
-            'total'        => $total,
+            'date'         => $today, // info: which date is covered
+            'total_plus'   => (float) $total_plus,
+            'total_minus'  => (float) $total_minus,
+            'total'        => (float) $total,
         ]);
 
     } catch (\Exception $e) {
