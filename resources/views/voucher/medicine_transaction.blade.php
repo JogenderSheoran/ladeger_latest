@@ -75,84 +75,62 @@
 
                 <div class="row">
 
-                    <form id="add_journal_voucher">
+                <form id="add_journal_voucher">
                         {{ csrf_field() }}
                         <div class="col-md-12">
                             <!-- BEGIN EXAMPLE TABLE PORTLET-->
                             <div class="portlet light ">
                                 <div class="portlet-title">
                                     <div class="col-md-12" style="margin-bottom: 5px;">
-                                        <div class="row">
-                                            <div class="col-md-2 col-sm-6 col-xs-6">
-                                                <div class="btn-group" style="width: 100%;">
-                                                    <input type="date" id="date_from" name="date"
-                                                        class="input-group form-control form-control-inline"
-                                                        value="{{ date('Y-m-d')}}" style="width: 100%;"/>
-                                                </div>
-                                            </div>
+                                        <div class="btn-group">
+                                            <input type="date" id="date_from" name="date"
+                                                class="input-group form-control form-control-inline"
+                                                value="{{ date('Y-m-d')}}"/>
+                                        </div>
 
-                                            <input type="hidden" id="party1" name="medicine_id" />
-                                            <input type="hidden" name="admin_id" value="{{Auth::user()->id}}">
-                                            
-                                            <div class="col-md-3 col-sm-6 col-xs-6">
-                                                <div class="btn-group" style="width: 100%;">
-                                                    <input type="text" autocomplete="off" placeholder="Medicine" 
-                                                        oninput='onInput_party()' list="party_balance_list" id="party_balance"
-                                                        name="medicine_name" class="input-group form-control form-control-inline"
-                                                        required autofocus style="width: 100%;">
-                                                    <datalist id="party_balance_list" name="medicine_id">
-                                                        @foreach($medicine as $m)
-                                                        <option value='{{$m->medicine_name}}'>{{$m->id}}</option>
-                                                        @endforeach
-                                                    </datalist>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="col-md-2 col-sm-4 col-xs-6">
-                                                <div class="btn-group mobile" style="width: 100%;">
-                                                    <input type="text" id="amount" name="amount" autocomplete="off"  placeholder="Amount"
-                                                        class="input-group form-control form-control-inline" required style="width: 100%;"/>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="col-md-2 col-sm-4 col-xs-6">
-                                                <div class="btn-group" style="width: 100%;">
-                                                    <select class="form-control" name="type" id="type" style="width: 100%;">
-                                                        <option value="minus" selected>Minus</option>
-                                                        <option value="plus">Plus</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            
-                                            <input type="hidden" id="party2" name="ledger_id_2" />
-                                            
-                                            <div class="col-md-3 col-sm-4 col-xs-6" style="display:none;" id="type_section">
-                                                <div class="btn-group" style="width: 100%;">
-                                                    <input type="text" autocomplete="off" placeholder="Medicine"
-                                                        oninput='onInput_opposite()' list="opposite_party_list" id="opposite_party_balance"
-                                                        name="ledger_name_2" class="input-group form-control form-control-inline"
-                                                        style="width: 100%;">
-                                                    <datalist id="opposite_party_list" name="ledger_id2">
-                                                        @foreach($medicine as $m)
-                                                        <option value='{{$m->medicine_name}}'>{{$m->id}}</option>
-                                                        @endforeach
-                                                    </datalist>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="col-md-2 col-sm-6 col-xs-6">
-                                                <div class="btn-group mobile" style="width: 100%;">
-                                                    <input type="text" id="remark" autocomplete="off" name="remark" placeholder="Remark"
-                                                        class="input-group form-control form-control-inline" style="width: 100%;" />
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="col-md-1 col-sm-6 col-xs-12">
-                                                <div class="btn-group" style="width: 100%;">
-                                                    <button type="submit" id="save" class="btn btn-success" style="width: 100%; padding: 6px 12px; font-size: 12px;">Save</button>
-                                                    <button style="display:none;" id="wait" class="btn btn-warning" style="width: 100%; padding: 6px 12px; font-size: 12px;"><i class="icon-spinner"></i>Please Wait...</button>
-                                                </div>
-                                            </div>
+                                        <input type="hidden" id="party1" name="medicine_id" />
+                                        <input type="hidden" name="admin_id" value="{{Auth::user()->id}}">
+                                        <div class="btn-group">
+                                            <input type="text" autocomplete="off" placeholder="Medicine" 
+                                                oninput='onInput_party()' list="party_balance_list" id="party_balance"
+                                                name="medicine_name" class="input-group form-control form-control-inline"
+                                                required autofocus>
+                                            <datalist id="party_balance_list" name="medicine_id">
+                                                @foreach($medicine as $m)
+                                                <option value='{{$m->medicine_name}}'>{{$m->id}}</option>
+                                                @endforeach
+                                            </datalist>
+                                        </div>
+                                        <div class="btn-group mobile" style="width:8%">
+                                            <input type="text" id="amount" name="amount" autocomplete="off"  placeholder="Amount"
+                                                class="input-group form-control form-control-inline" required/>
+                                        </div>
+                                        <div class="btn-group">
+                                            <select class="form-control" name="type" id="type">
+                                                <option value="minus" selected>Minus</option>
+                                                <option value="plus">Plus</option>
+                                            </select>
+                                        </div>
+                                        <input type="hidden" id="party2" name="ledger_id_2" />
+                                        <div class="btn-group" style="display:none;" id="type_section">
+                                            <input type="text" autocomplete="off" placeholder="Medicine"
+                                                oninput='onInput_opposite()' list="opposite_party_list" id="opposite_party_balance"
+                                                name="ledger_name_2" class="input-group form-control form-control-inline"
+                                                >
+                                            <datalist id="opposite_party_list" name="ledger_id2">
+                                                @foreach($medicine as $m)
+                                                <option value='{{$m->medicine_name}}'>{{$m->id}}</option>
+                                                @endforeach
+                                            </datalist>
+                                        </div>
+                                        <div class="btn-group mobile" style="width:8%">
+                                            <input type="text" id="remark" autocomplete="off" name="remark" placeholder="remark"
+                                                class="input-group form-control form-control-inline" />
+                                        </div>
+                                        <div class="btn-group">
+                                            <button type="submit" id="save" class="btn green">Save</button>
+                                            <button style="display:none;" id="wait" class="btn yellow"><i
+                                                    class="icon-spinner"></i>Please Wait...</button>
                                         </div>
                                     </div>
                     </form>
@@ -162,17 +140,17 @@
 
                         <div class="d-flex justify-content-around my-3">
                             <!-- Plus Button -->
-                            <button id="plusBtn" class="btn btn-xs" style="background: #1e7e34; color: white; font-weight: bold; border: 1px solid #155724; box-shadow: 0 2px 8px rgba(30, 126, 52, 0.3); border-radius: 15px; padding: 6px 15px; margin: 3px; transition: all 0.3s ease; font-size: 12px;">
+                            <button id="plusBtn" class="btn" style="background: #1e7e34; color: white; font-weight: bold; border: 1px solid #155724; box-shadow: 0 2px 8px rgba(30, 126, 52, 0.3); ">
                                 <i class="fa fa-plus-circle"></i> <strong>Plus: + {{ $total_plus }}</strong>
                             </button>
 
                             <!-- Minus Button -->
-                            <button id="minusBtn" class="btn btn-xs" style="background: #bd2130; color: white; font-weight: bold; border: 1px solid #721c24; box-shadow: 0 2px 8px rgba(189, 33, 48, 0.3); border-radius: 15px; padding: 6px 15px; margin: 3px; transition: all 0.3s ease; font-size: 12px;">
+                            <button id="minusBtn" class="btn" style="background: #bd2130; color: white; font-weight: bold; border: 1px solid #721c24; box-shadow: 0 2px 8px rgba(189, 33, 48, 0.3); ">
                                 <i class="fa fa-minus-circle"></i> <strong>Minus: - {{ $total_minus }}</strong>
                             </button>
 
                             <!-- Total Button -->
-                            <button id="totalBtn" class="btn btn-xs" @if($total <= 0) style="background: #bd2130; color: white; font-weight: bold; border: 1px solid #721c24; box-shadow: 0 2px 8px rgba(189, 33, 48, 0.3); border-radius: 15px; padding: 6px 15px; margin: 3px; transition: all 0.3s ease; font-size: 12px;" @else style="background: #1e7e34; color: white; font-weight: bold; border: 1px solid #155724; box-shadow: 0 2px 8px rgba(30, 126, 52, 0.3); border-radius: 15px; padding: 6px 15px; margin: 3px; transition: all 0.3s ease; font-size: 12px;" @endif>
+                            <button id="totalBtn" class="btn" @if($total <= 0) style="background: #bd2130; color: white; font-weight: bold; border: 1px solid #721c24; box-shadow: 0 2px 8px rgba(189, 33, 48, 0.3); " @else style="background: #1e7e34; color: white; font-weight: bold; border: 1px solid #155724; box-shadow: 0 2px 8px rgba(30, 126, 52, 0.3); " @endif>
                                 <i class="fa fa-calculator"></i> <strong>Total: {{ $total }}</strong>
                             </button>
                         </div><br>
@@ -1224,8 +1202,8 @@ $('#edit_journal_voucher').submit(function (e) {
                     });
                     // Positive amount - Blue styling for Generate Bill
                     $('#generateBillButton').css({
-                        'background': 'linear-gradient(45deg,rgb(26, 177, 20) 0%,rgb(12, 192, 36) 100%)',
-                        'box-shadow': '0 4px 15px rgba(26, 177, 20, 0.4)'
+                        'background': 'linear-gradient(45deg,   rgb(15, 28, 211) 0%,rgb(21, 24, 194) 100%)',
+                        'box-shadow': '0 4px 15px rgba(32, 15, 180, 0.4)'
                     });
                 } else {
                     // Negative amount - Red styling for Net Amount
@@ -1235,8 +1213,8 @@ $('#edit_journal_voucher').submit(function (e) {
                     });
                     // Negative amount - Orange styling for Generate Bill
                     $('#generateBillButton').css({
-                        'background': 'linear-gradient(45deg,   rgb(241, 6, 61) 0%,rgb(223, 42, 10) 100%)',
-                        'box-shadow': '0 4px 15px rgba(255, 154, 86, 0.4)'
+                        'background': 'linear-gradient(45deg,   rgb(15, 28, 211) 0%,rgb(21, 24, 194) 100%)',
+                        'box-shadow': '0 4px 15px rgba(32, 15, 180, 0.4)'
                     });
                 }
 
