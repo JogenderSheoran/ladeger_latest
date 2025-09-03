@@ -136,7 +136,7 @@ class shiftController extends Controller
                   // Retrieve current medicines for the given ledger
                     $currentMedicines = Medicine::where('ledger_id', $r->id)->get();
                     $currentMedicineNames = $currentMedicines->pluck('medicine_name')->toArray();
-                    $newMedicineNames = $r->medicine_name;
+                    $newMedicineNames = $r->medicine_name ?? [];
 
                     // Find medicines to delete
                     $medicinesToDelete = array_diff($currentMedicineNames, $newMedicineNames);

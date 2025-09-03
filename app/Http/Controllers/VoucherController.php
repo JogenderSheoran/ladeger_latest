@@ -63,28 +63,33 @@ class VoucherController extends Controller
     //     return View::make('voucher.medicine_transaction',compact('title','data','medicine'));
     // }
 
-    public function medicine_transaction(){
-        $title='Medicine Transaction';
-        $medicine=Medicine::where('admin_id',Auth::user()->id)->get();
-       
-        $today = Carbon::today()->toDateString();
+    public function medicine_transaction()
+    {
+        $title = 'Medicine Transaction';
+        $medicine = Medicine::where('admin_id', Auth::user()->id)->get();
 
-        // Get total plus transactions for today
+        $today = Carbon::today();
+        $startDate = $today->copy()->subDays(2)->toDateString(); // परसों
+        $endDate   = $today->toDateString(); // आज
+
+        // Get total plus transactions for last 3 days
         $total_plus = MedicineTransaction::where('admin_id', Auth::user()->id)
-            ->where('date', $today)
+            ->whereBetween('date', [$startDate, $endDate])
             ->where('type', 'plus')
             ->sum('medicine_amount');
 
-        // Get total minus transactions for today
+        // Get total minus transactions for last 3 days
         $total_minus = MedicineTransaction::where('admin_id', Auth::user()->id)
-            ->where('date', $today)
+            ->whereBetween('date', [$startDate, $endDate])
             ->where('type', 'minus')
             ->sum('medicine_amount');
 
         $total = $total_plus - $total_minus;
 
-        return View::make('voucher.medicine_transaction',compact('title','medicine','total_plus','total_minus','total'));
+        return View::make('voucher.medicine_transaction', compact('title','medicine','total_plus','total_minus','total'));
     }
+
+    
 
     public function ledger_report($id)
     {
@@ -590,40 +595,43 @@ class VoucherController extends Controller
     // }
 
     public function getMedicineTotals(Request $request)
-{
-    try {
-        $today = Carbon::today()->toDateString();
-
-        // Use the same logic as medicine_transaction method for consistency
-        // Get total plus transactions for today
-        $total_plus = MedicineTransaction::where('admin_id', Auth::user()->id)
-            ->where('date', $today)
-            ->where('type', 'plus')
-            ->sum('medicine_amount');
-
-        // Get total minus transactions for today
-        $total_minus = MedicineTransaction::where('admin_id', Auth::user()->id)
-            ->where('date', $today)
-            ->where('type', 'minus')
-            ->sum('medicine_amount');
-
-        $total = $total_plus - $total_minus;
-
-        return response()->json([
-            'status'       => 'success',
-            'date'         => $today, // info: which date is covered
-            'total_plus'   => (float) $total_plus,
-            'total_minus'  => (float) $total_minus,
-            'total'        => (float) $total,
-        ]);
-
-    } catch (\Exception $e) {
-        return response()->json([
-            'status'  => 'error',
-            'message' => 'Error getting totals: ' . $e->getMessage()
-        ], 500);
+    {
+        try {
+            $today = Carbon::today();
+            $startDate = $today->copy()->subDays(2)->toDateString();
+            $endDate   = $today->toDateString();
+    
+            // Plus transactions (last 3 days)
+            $total_plus = MedicineTransaction::where('admin_id', Auth::user()->id)
+                ->whereBetween('date', [$startDate, $endDate])
+                ->where('type', 'plus')
+                ->sum('medicine_amount');
+          
+    
+            // Minus transactions (last 3 days)
+            $total_minus = MedicineTransaction::where('admin_id', Auth::user()->id)
+                ->whereBetween('date', [$startDate, $endDate])
+                ->where('type', 'minus')
+                ->sum('medicine_amount');
+    
+            $total = $total_plus - $total_minus;
+    
+            return response()->json([
+                'status'       => 'success',
+                'range'        => $startDate . ' to ' . $endDate,
+                'total_plus'   => (float) $total_plus,
+                'total_minus'  => (float) $total_minus,
+                'total'        => (float) $total,
+            ]);
+    
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Error getting totals: ' . $e->getMessage()
+            ], 500);
+        }
     }
-}
+    
 
   
 }

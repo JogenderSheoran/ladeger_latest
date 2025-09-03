@@ -852,22 +852,68 @@ $(document).ready(function() {
 
 
 function isNumberKey(evt){
-        // var charCode = (evt.which) ? evt.which : event.keyCode;
-        // if(charCode==46 || charCode==190){
-        //     if(evt.target.value.includes('.')){
-        //         return false;
-        //     }else{
-        //         return true;
-        //     }
-        // }else{
-
-        //     if (charCode > 31 && (charCode < 48 || charCode > 57)){
-        //         return false;
-        //     }else{
-        //         return true;
-        //     }
-        // }
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        
+        // Allow: backspace, delete, tab, escape, enter
+        if ([8, 9, 27, 13, 46].indexOf(charCode) !== -1 ||
+            // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+            (charCode === 65 && evt.ctrlKey === true) ||
+            (charCode === 67 && evt.ctrlKey === true) ||
+            (charCode === 86 && evt.ctrlKey === true) ||
+            (charCode === 88 && evt.ctrlKey === true) ||
+            // Allow: home, end, left, right
+            (charCode >= 35 && charCode <= 39)) {
+            return true;
+        }
+        
+        // Allow decimal point only once
+        if (charCode === 46 || charCode === 190) {
+            if (evt.target.value.includes('.')) {
+                return false;
+            }
+            return true;
+        }
+        
+        // Ensure that it is a number and stop the keypress
+        if ((evt.shiftKey || (charCode < 48 || charCode > 57)) && (charCode < 96 || charCode > 105)) {
+            return false;
+        }
+        
+        return true;
     }
+
+    // Add numeric-only validation for rate and rebate fields
+    $(document).ready(function() {
+        // Event delegation for dynamically added fields
+        $(document).on('keypress', '.numeric-only', function(e) {
+            return isNumberKey(e);
+        });
+        
+        // Prevent pasting non-numeric content
+        $(document).on('paste', '.numeric-only', function(e) {
+            var pastedData = e.originalEvent.clipboardData.getData('text');
+            if (!/^\d*\.?\d*$/.test(pastedData)) {
+                e.preventDefault();
+                return false;
+            }
+        });
+        
+        // Remove non-numeric characters on input (fallback)
+        $(document).on('input', '.numeric-only', function(e) {
+            var value = this.value;
+            var numericValue = value.replace(/[^0-9.]/g, '');
+            
+            // Ensure only one decimal point
+            var parts = numericValue.split('.');
+            if (parts.length > 2) {
+                numericValue = parts[0] + '.' + parts.slice(1).join('');
+            }
+            
+            if (this.value !== numericValue) {
+                this.value = numericValue;
+            }
+        });
+    });
 </script>
 <script>
 
