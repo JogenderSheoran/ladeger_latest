@@ -1105,17 +1105,17 @@ $('#edit_journal_voucher').submit(function (e) {
                 console.log('Summary totals response:', response); // Debug log
                 if (response.status === 'success') {
                     // Update Plus button
-                    $('#plusBtn').html('<i class="fa fa-plus-circle"></i> <strong>Plus: + ' + response.total_plus.toFixed(2) + '</strong>');
+                    $('#plusBtn').html('<i class="fa fa-plus-circle"></i> <strong>Plus: + ' + response.total_plus + '</strong>');
                     
                     // Update Minus button
-                    $('#minusBtn').html('<i class="fa fa-minus-circle"></i> <strong>Minus: - ' + response.total_minus.toFixed(2) + '</strong>');
+                    $('#minusBtn').html('<i class="fa fa-minus-circle"></i> <strong>Minus: - ' + response.total_minus + '</strong>');
                     
                     // Update Total button with conditional styling
                     var totalBtnStyle = response.total <= 0 
                         ? 'background: linear-gradient(45deg,rgb(241, 6, 61) 0%,rgb(223, 42, 10) 100%); color: white; font-weight: bold; border: 1px solid #721c24; box-shadow: 0 2px 8px rgba(189, 33, 48, 0.3); border-radius: 15px; padding: 6px 15px; margin: 3px; transition: all 0.3s ease; font-size: 12px;'
                         : 'background: linear-gradient(45deg,rgb(49, 143, 6) 0%,rgb(10, 121, 80) 100%); color: white; font-weight: bold; border: 1px solid #155724; box-shadow: 0 2px 8px rgba(30, 126, 52, 0.3); border-radius: 15px; padding: 6px 15px; margin: 3px; transition: all 0.3s ease; font-size: 12px;';
                     
-                    $('#totalBtn').attr('style', totalBtnStyle).html('<i class="fa fa-calculator"></i> <strong>Total: ' + response.total.toFixed(2) + '</strong>');
+                    $('#totalBtn').attr('style', totalBtnStyle).html('<i class="fa fa-calculator"></i> <strong>Total: ' + response.total + '</strong>');
                     
                     console.log('Summary buttons updated successfully'); // Debug log
                 } else {

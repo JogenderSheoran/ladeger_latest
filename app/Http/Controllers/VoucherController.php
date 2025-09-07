@@ -95,12 +95,25 @@ class VoucherController extends Controller
     {
         $title='Vocher';
         $data=JournalVoucher::where('archieve_status',1)->where('ledger_id',$id)->where('status',1)->where('admin_id',Auth::user()->id)->orderBy('id','DESC')->get();
+        $total_plus = 0;
+        $total_minus = 0;
         foreach($data as $d){
+            if($d->medicine_transaction==1){
+                if($d->medicine_transaction_type=='plus'){
+                    $total_plus += $d->medicine_new_amount;
+                }elseif($d->medicine_transaction_type=='minus'){
+                    $total_minus += $d->medicine_new_amount;
+                }
+            }
             $d->party1=ledger::where('id',$d->party1)->value('name');
             $d->party2=ledger::where('id',$d->party2)->value('name');
         }
+        $total=$total_plus-$total_minus;
+        
         $ledger=ledger::where('status',1)->where('admin_id',Auth::user()->id)->where('archieve_status',1)->get();
-        return View::make('voucher.user_journal_voucher',compact('title','data','ledger'));
+
+        
+        return View::make('voucher.user_journal_voucher',compact('title','data','ledger','total_plus','total_minus','total'));
     }
 
     public function archieve_transaction()

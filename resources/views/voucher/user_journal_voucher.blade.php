@@ -142,9 +142,24 @@
                     <div class="col-md-12">
                         <!-- BEGIN EXAMPLE TABLE PORTLET-->
                         <div class="portlet light ">
-
-                           
                             <div class="table-responsive CustomFixedTbl">
+                            <div class="d-flex justify-content-around my-3">
+                            <!-- Plus Button -->
+                            {{--<button id="plusBtn" class="btn" style="background: #1e7e34; color: white; font-weight: bold; border: 1px solid #155724; box-shadow: 0 2px 8px rgba(30, 126, 52, 0.3); ">
+                                <i class="fa fa-plus-circle"></i> <strong>Plus: + {{ $total_plus }}</strong>
+                            </button>
+
+                            <!-- Minus Button -->
+                            <button id="minusBtn" class="btn" style="background: #bd2130; color: white; font-weight: bold; border: 1px solid #721c24; box-shadow: 0 2px 8px rgba(189, 33, 48, 0.3); ">
+                                <i class="fa fa-minus-circle"></i> <strong>Minus: - {{ $total_minus }}</strong>
+                            </button>--}}
+
+                            <!-- Total Button -->
+                            <button id="totalBtn" class="btn" @if($total <= 0) style="background: #bd2130;float:right;color: white; font-weight: bold; border: 1px solid #721c24; box-shadow: 0 2px 8px rgba(189, 33, 48, 0.3); " @else style="background: #1e7e34;float:right;color: white; font-weight: bold; border: 1px solid #155724; box-shadow: 0 2px 8px rgba(30, 126, 52, 0.3); " @endif>
+                                <i class="fa fa-calculator"></i> <strong>Medicine Bill: {{ $total }}</strong>
+                            </button>
+                        </div><br>
+
                                 <table class="table table-bordered" id="mytable">
                                     <thead>
                                         <tr>
