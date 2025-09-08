@@ -662,6 +662,7 @@
             cache: false,
             success: function (data) {
                 if (data.type == 1 || data.status == true) {
+                    $("#medicine_name").focus();
                     // Instead of full page reload, just refresh DataTable and summary
                     $('#mytable').DataTable().ajax.reload(null, false); // false = keep current page
                     
@@ -695,7 +696,7 @@
                 enterPressCount = 0;
 
                 // Move focus to the medicine name input field
-                $('#medicine_name').focus();
+                $('#party_balance').focus();
             },
             error: function() {
                 isSubmitting = false;
@@ -708,7 +709,7 @@
                 enterPressCount = 0;
 
                 // Move focus to the medicine name input field
-                $('#medicine_name').focus();
+                $('#party_balance').focus();
             }
         });
     });
