@@ -44,6 +44,19 @@
         color: #736666;
         font-weight: bold;
     }
+
+    .text-effect {
+        position: relative;
+    }
+
+    .text-effect .corner-amount {
+        position: absolute;
+        top: 2px;
+        right: 5px;
+        font-size: 1rem;  /* बड़ा font size */
+        font-weight: bold;
+    }
+
 </style>
 
 @php
@@ -198,7 +211,14 @@
 
                                             </td>
                                             
-                                            <td class="text-effect"> @if($value->medicine_transaction==1) {{substr_replace($value->medicine_amount,'.',-2,0)}} @endif</td>
+                                            <td class="text-effect position-relative">
+                                            @if($value->medicine_transaction==1)
+                                                {{ substr_replace($value->medicine_amount, '.', -2, 0) }}
+                                                <span class="corner-amount {{ ($total ?? 0) < 0 ? 'text-danger' : 'text-success' }}">
+                                                    {{ $total ?? '' }}
+                                                </span>
+                                            @endif
+                                        </td>
                                             <td class="text-effect"> @if($value->medicine_transaction==0) {{substr_replace($value->amount,'.',-2,0)}} @else {{substr_replace($value->medicine_new_amount,'.',-2,0)}}  @endif</td>
                                             <td class="text-effect">{{$value->remark}} @if($value->remark1!='') ({{$value->remark1}}) @endif</td>
 

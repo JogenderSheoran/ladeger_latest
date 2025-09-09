@@ -8,6 +8,7 @@
 
     .div-width {
         width: 15%;
+        min-width: 120px;
     }
 
     .heading {
@@ -23,19 +24,21 @@
         display: block;
         width: 100%;
         overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
     .CustomFixedTbl table thead th {
         position: sticky;
         top: 0;
         border: 1px solid #DDD;
+        white-space: nowrap;
     }
 
     .CustomFixedTbl table tbody td {
-        position: sticky;
-        top: 0;
         border: 1px solid #DDD;
         font-weight: bold;
+        word-wrap: break-word;
+        max-width: 200px;
     }
 
     .table {
@@ -58,6 +61,10 @@
         -webkit-border-radius: 10px;
         -moz-border-radius: 10px;
         border-radius: 10px !important;
+        min-height: 120px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
 
     .status-title {
@@ -113,6 +120,49 @@
         margin: 0;
         line-height: 100%;
     }
+
+    /* Additional responsive styles */
+    @media (max-width: 768px) {
+        .card-body {
+            padding: 0.25rem 0.25rem !important;
+        }
+        
+        .table {
+            font-size: 0.875rem;
+        }
+        
+        .btn {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .table {
+            font-size: 0.75rem;
+        }
+        
+        .btn {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.4rem;
+        }
+        
+        .CustomFixedTbl table thead th,
+        .CustomFixedTbl table tbody td {
+            padding: 0.25rem;
+        }
+    }
+
+    /* Ensure proper scaling on zoom */
+    .page-content-wrapper {
+        overflow-x: hidden;
+    }
+    
+    .container-fluid {
+        max-width: 100%;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
 </style>
 <!-- BEGIN CONTENT -->
 <div class="page-content-wrapper">
@@ -120,7 +170,7 @@
 
     <!-- BEGIN PAGE CONTENT BODY -->
     <div class="page-content">
-        <div class="container">
+        <div class="container-fluid">
 
             <!-- BEGIN PAGE BREADCRUMBS -->
             <ul class="page-breadcrumb breadcrumb">
@@ -136,11 +186,7 @@
 
             <!-- BEGIN PAGE CONTENT INNER -->
             <div class="page-content-inner">
-
-
-
                 <div class="row">
-                    <div class="row gutters">
                         {{-- <div class="col-xl-8 col-lglg-8 col-md-8 col-sm-8 col-12">
 
                             <div class="row" id="DashboardShiftBody">
@@ -172,17 +218,17 @@
 
 
                     </div>
-                    <div class="col-xl-6 col-lglg-6 col-md-6 col-sm-6 col-12">
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 mb-3">
                         <div class="card">
                             <div class="card-body" style="padding: 0.55rem 0.55rem;">
 
                                 <div class="table-responsive CustomFixedTbl">
-                                    <table id="" class="table">
+                                    <table id="" class="table" style="font-size: 12px;">
                                         <thead>
                                             <tr>
-                                                <th style="width:40px;">SR</th>
-                                                <th>LEDGER </th>
-                                                <th class="text-center" style="width:130px;">Net Balance</th>
+                                                <th style="min-width:40px;">SR</th>
+                                                <th style="min-width:120px;">LEDGER </th>
+                                                <th class="text-center" style="min-width:130px;">Net Balance</th>
                                             </tr>
                                         </thead>
 
@@ -223,7 +269,7 @@
                                                         <a href="javascript:;" id="search"
                                                             class="btn sbold green">{{substr_replace($l->net_balance,'.',-2,0)}}</a>
                                                         @else
-                                                       
+                                                        
                                                         <a href="javascript:;" id="search"
                                                             class="btn sbold red">{{substr_replace($l->net_balance,'.',-2,0)}}</a>
                                                         @endif
@@ -241,7 +287,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-6 col-lglg-6 col-md-6 col-sm-6 col-12">
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 mb-3">
                         <div class="card">
                             <div class="card-body" style="padding: 0.55rem 0.55rem;">
 
@@ -249,9 +295,9 @@
                                     <table id="" class="table">
                                         <thead>
                                             <tr>
-                                                <th style="width:40px;">SR</th>
-                                                <th>LEDGER </th>
-                                                <th class="text-center" style="width:130px;">Net Balance</th>
+                                                <th style="min-width:40px;">SR</th>
+                                                <th style="min-width:120px;">LEDGER </th>
+                                                <th class="text-center" style="min-width:130px;">Net Balance</th>
                                             </tr>
                                         </thead>
 
