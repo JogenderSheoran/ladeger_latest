@@ -140,6 +140,14 @@ class VoucherController extends Controller
         $startOfWeek = Carbon::now()->startOfWeek()->format('Y-m-d');
         $endOfWeek   = Carbon::now()->endOfWeek()->format('Y-m-d');
 
+        $netAmount = JournalVoucher::where('ledger_id', $id)
+            ->where('status', 1)
+            ->where('admin_id', Auth::user()->id)
+            ->where('bill_date','>=',$startOfWeek)
+            ->where('bill_date','<=',$endOfWeek)
+            ->value('net_amount');
+       
+
         $weeklyData = JournalVoucher::where('ledger_id', $id)
             ->where('status', 1)
             ->where('admin_id', Auth::user()->id)
@@ -345,6 +353,7 @@ class VoucherController extends Controller
 
     public function ledgerBillUpdate (Request $request)
     {
+       
         $ledgerId = $request->input('ledger_id');
 
         $transactionCount = MedicineTransaction::where('ledger_id', $ledgerId)
@@ -390,6 +399,8 @@ class VoucherController extends Controller
                 $rebate_amount = $rate_amount * $rebate /100;
                 $final_amount = $rate_amount - $rebate_amount;
                 $insert->amount = $transaction->amount;
+                $insert->net_amount = $request->netamount;
+                $insert->bill_date = date('Y-m-d');
                 if($transaction->type=='plus'){
                     $insert->medicine_new_amount = $rate_amount;
                 }

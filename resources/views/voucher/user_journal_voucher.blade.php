@@ -167,10 +167,6 @@
                                 <i class="fa fa-minus-circle"></i> <strong>Minus: - {{ $total_minus }}</strong>
                             </button>--}}
 
-                            <!-- Total Button -->
-                            <button id="totalBtn" class="btn" @if($total <= 0) style="background: #bd2130;float:right;color: white; font-weight: bold; border: 1px solid #721c24; box-shadow: 0 2px 8px rgba(189, 33, 48, 0.3); " @else style="background: #1e7e34;float:right;color: white; font-weight: bold; border: 1px solid #155724; box-shadow: 0 2px 8px rgba(30, 126, 52, 0.3); " @endif>
-                                <i class="fa fa-calculator"></i> <strong>Medicine Bill: {{ $total }}</strong>
-                            </button>
                         </div><br>
 
                                 <table class="table table-bordered" id="mytable">
@@ -193,6 +189,10 @@
 
                                     <tbody class="text-effect" id="table_body">
 
+                                    @php
+                                        $latestDate = collect($data)->max('date');
+                                    @endphp
+
                                     @foreach($data as $key => $value)
                                         <tr id="row{{$value->id}}" @if($value->transaction_status==1) style="background-color:rgb(150 221 150)" @endif>
                                             <td class="text-effect">{{++$key}}</td>
@@ -214,9 +214,12 @@
                                             <td class="text-effect position-relative">
                                             @if($value->medicine_transaction==1)
                                                 {{ substr_replace($value->medicine_amount, '.', -2, 0) }}
-                                                <span class="corner-amount {{ ($total ?? 0) < 0 ? 'text-danger' : 'text-success' }}">
-                                                    {{ $total ?? '' }}
+                                                
+                                                @if($value->date == $latestDate && !empty($value->net_amount) && !empty($value->bill_date))
+                                                <span class="corner-amount {{ ($value->net_amount ?? 0) < 0 ? 'text-danger' : 'text-success' }}">
+                                                    {{ $value->net_amount ?? '' }}
                                                 </span>
+                                                @endif
                                             @endif
                                         </td>
                                             <td class="text-effect"> @if($value->medicine_transaction==0) {{substr_replace($value->amount,'.',-2,0)}} @else {{substr_replace($value->medicine_new_amount,'.',-2,0)}}  @endif</td>
@@ -238,7 +241,7 @@
                                         </tr>
                                         <span id="rowDate{{$value->id}}" class="hide">{{$value->date}}</span>
                                         <span class="rowDate{{$value->id}} hide">{{$value->active}}</span>
-                                        @endforeach
+                                    @endforeach
 
 
                                     </tbody>

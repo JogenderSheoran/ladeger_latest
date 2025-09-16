@@ -242,7 +242,7 @@
                         </tbody>
                     </table>
                 </div>
-
+                <input type="hidden" id="netamount">
                 <!-- Total amounts display -->
                 <div class="text-center mt-3">
                     <!-- Hide Plus and Minus buttons, show only Total -->
@@ -1193,6 +1193,8 @@ $('#edit_journal_voucher').submit(function (e) {
                 $('#totalPlus').text(response.totals.totalPlus.toFixed(2));
                 $('#totalMinus').text(response.totals.totalMinus.toFixed(2));
                 $('#totalAmount').text(response.totals.totalAmount.toFixed(2));
+                $("#netamount").val(response.totals.totalAmount.toFixed(2));
+
                 
                 // Apply conditional styling to both net amount and bill generation buttons
                 if (response.totals.totalAmount >= 0) {
@@ -1237,34 +1239,38 @@ $('#edit_journal_voucher').submit(function (e) {
         });
     }
     $(document).on('click', '#generateBillButton', function() {
-        var ledgerId = $('#ledgerId').val(); // Make sure you have the ledgerId value available
+    var $btn = $(this); // button reference
+    $btn.prop('disabled', true); // disable button immediately after click
 
-        $.ajax({
-            url: '{{ route("ledgerBillUpdate") }}', // Route to your update status endpoint
-            type: 'POST',
-            data: {
-                ledger_id: ledgerId,
-                _token: '{{ csrf_token() }}'
-            },
-            success: function(response) {
-                if(response.status==true){
-                    toastr.success('Bill generated successfully!', 'Success');
-                    setTimeout(function() {
-                        window.location.reload();
-                    }, 2000); // Reload after 2 seconds
-                }
-                else{
-                    toastr.success(response.message, 'Error');
-                }
-               
-                // Optionally, you can reload the page or update the UI accordingly
-            },
-            error: function(xhr, status, error) {
-                console.error('Error updating ledger status:', error);
-                // Handle error display or logging
+    var ledgerId = $('#ledgerId').val();
+
+    $.ajax({
+        url: '{{ route("ledgerBillUpdate") }}',
+        type: 'POST',
+        data: {
+            ledger_id: ledgerId,
+            _token: '{{ csrf_token() }}',
+            netamount: $('#netamount').val(),
+        },
+        success: function(response) {
+            if (response.status == true) {
+                toastr.success('Bill generated successfully!', 'Success');
+                setTimeout(function() {
+                    window.location.reload();
+                }, 2000);
+            } else {
+                toastr.error(response.message || 'Something went wrong!', 'Error');
+                $btn.prop('disabled', false); // enable again if error
             }
-        });
+        },
+        error: function(xhr, status, error) {
+            console.error('Error updating ledger status:', error);
+            toastr.error('Error updating ledger. Please try again.', 'Error');
+            $btn.prop('disabled', false); // enable button on failure
+        }
     });
+});
+
 </script>
 
 @endsection
