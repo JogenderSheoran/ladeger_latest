@@ -85,7 +85,7 @@
                                         <div class="btn-group">
                                             <input type="date" id="date_from" name="date"
                                                 class="input-group form-control form-control-inline"
-                                                value="{{ date('Y-m-d')}}"/>
+                                                value="{{ date('Y-m-d')}}"   max="{{ date('Y-m-d') }}"/>
                                         </div>
 
                                         <input type="hidden" id="party1" name="medicine_id" />
@@ -159,18 +159,18 @@
                                 <table class="table table-bordered" id="mytable" style="width: 100%;">
                                     <thead>
                                         <tr>
-                                            <th class="text-effect" style="width: 5%; font-size: 13px;">Sr.</th>
-                                            <th class="text-effect" style="width: 8%; font-size: 13px;">Date</th>
-                                            <th class="text-effect" style="width: 12%; font-size: 13px;">Medicine</th>
-                                            <th class="text-effect" style="width: 10%; font-size: 13px;">Ledger</th>
-                                            <th class="text-effect" style="width: 6%; font-size: 13px;">Type</th>
-                                            <th class="text-effect" style="width: 8%; font-size: 13px;">Med.Amt</th>
-                                            <th class="text-effect" style="width: 8%; font-size: 13px;">Amount</th>
-                                            <th class="text-effect" style="width: 7%; font-size: 13px;">Rate</th>
-                                            <th class="text-effect" style="width: 8%; font-size: 13px;">Rebate</th>
-                                            <th class="text-effect" style="width: 15%; font-size: 13px;">Remark</th>
-                                            <th class="text-effect" style="width: 6%; font-size: 13px;">Bill</th>
-                                            <th class="text-effect" style="width: 7%; font-size: 13px;">Action</th>
+                                            <th class="text-effect" style="width: 5%; ">Sr.</th>
+                                            <th class="text-effect" style="width: 8%; ">Date</th>
+                                            <th class="text-effect" style="width: 12%; ">Medicine</th>
+                                            <th class="text-effect" style="width: 10%; ">Ledger</th>
+                                            <th class="text-effect" style="width: 6%; ">Type</th>
+                                            <th class="text-effect" style="width: 8%; ">Med.Amt</th>
+                                            <th class="text-effect" style="width: 8%; ">Amount</th>
+                                            <th class="text-effect" style="width: 7%; ">Rate</th>
+                                            <th class="text-effect" style="width: 8%; ">Rebate</th>
+                                            <th class="text-effect" style="width: 15%; ">Remark</th>
+                                            <th class="text-effect" style="width: 6%; ">Bill</th>
+                                            <th class="text-effect" style="width: 7%; ">Action</th>
                                         </tr>
                                     </thead>
 
@@ -179,18 +179,18 @@
                                     </tbody>
                                     <tfoot class="dataTables_scrollHead">   
                                         <tr>
-                                            <th class="text-effect" style="width: 5%; font-size: 13px;">Sr.</th>
-                                            <th class="text-effect" style="width: 8%; font-size: 12px;">Date</th>
-                                            <th class="text-effect" style="width: 12%; font-size: 12px;">Medicine</th>
-                                            <th class="text-effect" style="width: 10%; font-size: 12px;">Ledger</th>
-                                            <th class="text-effect" style="width: 6%; font-size: 12px;">Type</th>
-                                            <th class="text-effect" style="width: 8%; font-size: 12px;">Med.Amt</th>
-                                            <th class="text-effect" style="width: 8%; font-size: 12px;">Amount</th>
-                                            <th class="text-effect" style="width: 7%; font-size: 12px;">Rate</th>
-                                            <th class="text-effect" style="width: 8%; font-size: 12px;">Rebate</th>
-                                            <th class="text-effect" style="width: 15%; font-size: 12px;">Remark</th>
-                                            <th class="text-effect" style="width: 6%; font-size: 12px;">Bill</th>
-                                            <th class="text-effect" style="width: 7%; font-size: 12px;">Action</th>
+                                            <th class="text-effect" style="width: 5%; ">Sr.</th>
+                                            <th class="text-effect" style="width: 8%; ">Date</th>
+                                            <th class="text-effect" style="width: 12%; ">Medicine</th>
+                                            <th class="text-effect" style="width: 10%; ">Ledger</th>
+                                            <th class="text-effect" style="width: 6%; ">Type</th>
+                                            <th class="text-effect" style="width: 8%; ">Med.Amt</th>
+                                            <th class="text-effect" style="width: 8%; ">Amount</th>
+                                            <th class="text-effect" style="width: 7%; ">Rate</th>
+                                            <th class="text-effect" style="width: 8%; ">Rebate</th>
+                                            <th class="text-effect" style="width: 15%; ">Remark</th>
+                                            <th class="text-effect" style="width: 6%; ">Bill</th>
+                                            <th class="text-effect" style="width: 7%; ">Action</th>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -284,7 +284,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">Date</label>
-                                    <input type="date" autocomplete="off" name="edit_date" id="edit_date" required class="form-control" />
+                                    <input type="date" autocomplete="off" name="edit_date" id="edit_date" required class="form-control"   max="{{ date('Y-m-d') }}"/>
                                 </div>
                             </div>
                             <div class="col-md-4">
