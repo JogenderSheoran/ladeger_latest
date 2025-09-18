@@ -834,7 +834,7 @@ class shiftController extends Controller
     // }
 
     public function add_journal_voucher(Request $request){
-
+        
         if($request->has('ledger_id')){
             $check=ledger::where('id',$request->ledger_id)->where('status',1)->count();
             if($check==0){
@@ -860,6 +860,9 @@ class shiftController extends Controller
        
     
         if($request->type==1){
+            if($request->ledger_id_2==''){
+                return response()->json(['message'=>'Ledger not found','status'=>'error']);
+            }
             $currentdate = date('Y-m-d');
             $transaction_id=mt_rand(1000000, 9999999);
             $message="added";
