@@ -127,19 +127,13 @@
             padding: 0.25rem 0.25rem !important;
         }
           
-        .btn {
-            font-size: 0.75rem;
-            padding: 0.25rem 0.5rem;
-        }
+       
     }
 
     @media (max-width: 576px) {
        
         
-        .btn {
-            font-size: 0.7rem;
-            padding: 0.2rem 0.4rem;
-        }
+     
         
         .CustomFixedTbl table thead th,
         .CustomFixedTbl table tbody td {
