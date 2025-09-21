@@ -2,6 +2,12 @@
   .top-menu{
     font-weight: bold;
   }  
+  .page-header .page-header-top{
+    height:105px !important;
+  }
+  .page-header .page-header-top .page-logo .logo-default{
+    margin:0px !important;
+  }
 </style>
 <div class="page-wrapper-row">
     <div class="page-wrapper-top">
@@ -15,8 +21,7 @@
                     <!-- BEGIN LOGO -->
                     <div class="page-logo">
                         <a href="{{route('home')}}">
-                            <h2 style="color:white;"><b>RcLedger</b></h2>
-                            {{-- <img src="../assets/layouts/layout3/img/logo-default.jpg" alt="logo" class="logo-default"> --}}
+                            <img src="{{URL::asset('image/logo/ledger-1.png')}}" height="100" width="100" alt="logo" class="logo-default">
                         </a>
                     </div>
                     <!-- END LOGO -->

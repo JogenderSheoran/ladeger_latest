@@ -3,10 +3,13 @@
 <div class="container-min-full-height d-flex justify-content-center align-items-center">
     <div class="login-center">
         <div class="navbar-header text-center mt-2 mb-4">
-            <a href="index.html">
-                <h1 class="fw-600">RcLedger</h1>
-                <span class="black">Welcome back,<br/></span>
-                <span class="black">Please sign in to your account below.</span>
+            <a>
+            <img src="{{ URL::asset('image/logo/ledger-logo-1.png') }}" 
+             height="200" width="200" 
+             alt="Logo" 
+                class="d-block mx-auto">
+            <span class="black d-block mt-3">Welcome back,<br/></span>
+            <span class="black">Please sign in to your account below.</span>
                 {{-- <img alt="" src="{{ URL::asset('/theme/assets/img/logo-dark.png')}}" class="login-logo"> --}}
             </a>
         </div>

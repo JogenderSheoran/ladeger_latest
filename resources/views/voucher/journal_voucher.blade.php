@@ -85,7 +85,7 @@
                                         <div class="btn-group">
                                             <input type="date" id="date_from" name="date"
                                                 class="input-group form-control form-control-inline"
-                                                value="{{ date('Y-m-d')}}"/>
+                                                value="{{ date('Y-m-d')}}" max="{{ date('Y-m-d')}}"/>
                                         </div>
 
                                         <input type="hidden" id="party1" name="ledger_id" />
