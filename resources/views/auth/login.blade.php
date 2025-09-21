@@ -4,7 +4,7 @@
     <div class="login-center">
         <div class="navbar-header text-center mt-2 mb-4">
             <a href="index.html">
-                <h1 class="fw-600">SMH</h1>
+                <h1 class="fw-600">RcLedger</h1>
                 <span class="black">Welcome back,<br/></span>
                 <span class="black">Please sign in to your account below.</span>
                 {{-- <img alt="" src="{{ URL::asset('/theme/assets/img/logo-dark.png')}}" class="login-logo"> --}}

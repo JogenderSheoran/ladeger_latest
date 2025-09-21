@@ -3,7 +3,7 @@
         <!-- BEGIN FOOTER -->
 
             <div class="page-footer">
-                <div class="container"> 2021 &copy; SMH</div>
+                <div class="container"> 2021 &copy; RcLedger</div>
             </div>
             <div class="scroll-to-top">
                 <i class="icon-arrow-up"></i>

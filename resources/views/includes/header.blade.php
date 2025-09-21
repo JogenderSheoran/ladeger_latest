@@ -15,7 +15,7 @@
                     <!-- BEGIN LOGO -->
                     <div class="page-logo">
                         <a href="{{route('home')}}">
-                            <h2 style="color:white;"><b>{{config('app.name')}}</b></h2>
+                            <h2 style="color:white;"><b>RcLedger</b></h2>
                             {{-- <img src="../assets/layouts/layout3/img/logo-default.jpg" alt="logo" class="logo-default"> --}}
                         </a>
                     </div>
