@@ -126,11 +126,7 @@
         .card-body {
             padding: 0.25rem 0.25rem !important;
         }
-        
-        .table {
-            font-size: 0.875rem;
-        }
-        
+          
         .btn {
             font-size: 0.75rem;
             padding: 0.25rem 0.5rem;
@@ -138,9 +134,7 @@
     }
 
     @media (max-width: 576px) {
-        .table {
-            font-size: 0.75rem;
-        }
+       
         
         .btn {
             font-size: 0.7rem;
@@ -223,7 +217,7 @@
                             <div class="card-body" style="padding: 0.55rem 0.55rem;">
 
                                 <div class="table-responsive CustomFixedTbl">
-                                    <table id="" class="table" style="font-size: 12px;">
+                                    <table id="" class="table">
                                         <thead>
                                             <tr>
                                                 <th style="min-width:40px;">SR</th>
@@ -238,7 +232,7 @@
                                                 <td>#</td>
                                                 <td>Admin</td>
                                                 <td class="text-center" style="padding:1px 5px;">
-                                                    <div style="margin-top:5px; font-size:12px;">
+                                                    <div style="margin-top:5px;">
                                                         @if($admin_amount->total_amount > 0)
                                                         <a href="javascript:;" id="search"
                                                             class="btn sbold green">{{substr_replace($admin_amount->total_amount,'.',-2,0)}}</a>
@@ -247,7 +241,7 @@
                                                             class="btn sbold red">{{substr_replace($admin_amount->total_amount,'.',-2,0)}}</a>
                                                         @endif
                                                     </div>
-                                                    <div style="font-size:10px; opacity:.7;"></div>
+                                                    <div style="opacity:.7;"></div>
                                                 </td>
                                             </tr>
                                             @endif
@@ -262,7 +256,7 @@
                                                 <td>{{$i}}</td>
                                                 <td><a href="{{route('ledger_report',['id'=>$l->id])}}" style="color:#666666">{{ucfirst($l->name)}}</a></td>
                                                 <td class="text-center" style="padding:1px 5px;">
-                                                    <div style="margin-top:5px; font-size:12px;">
+                                                    <div style="margin-top:5px;">
                                                         @if($l->net_balance > 0)
                                                          
                                                        
@@ -274,7 +268,7 @@
                                                             class="btn sbold red">{{substr_replace($l->net_balance,'.',-2,0)}}</a>
                                                         @endif
                                                     </div>
-                                                    <div style="font-size:10px; opacity:.7;"></div>
+                                                    <div style="opacity:.7;"></div>
                                                 </td>
                                                 
                                             </tr>
@@ -307,7 +301,7 @@
                                                 <td>#</td>
                                                 <td>Admin</td>
                                                 <td class="text-center" style="padding:1px 5px;">
-                                                    <div style="margin-top:5px; font-size:12px;">
+                                                    <div style="margin-top:5px;">
                                                         @if($admin_amount->total_amount > 0)
                                                         
                                                         <a href="javascript:;" id="search"
@@ -318,7 +312,7 @@
                                                             class="btn sbold red">{{substr_replace($admin_amount->total_amount,'.',-2,0)}}</a>
                                                         @endif
                                                     </div>
-                                                    <div style="font-size:10px; opacity:.7;"></div>
+                                                    <div style="opacity:.7;"></div>
                                                 </td>
                                             </tr>
                                             @endif
@@ -332,7 +326,7 @@
                                                     <td><a href="{{route('ledger_report',['id'=>$l->id])}}" style="color:#666666">{{ucfirst($l->name)}}</a></td>
                                                 </a>
                                                 <td class="text-center" style="padding:1px 5px;">
-                                                    <div style="margin-top:5px; font-size:12px;">
+                                                    <div style="margin-top:5px;">
                                                         @if($l->net_balance > 0)
                                                         
                                                         <a href="javascript:;" id="search"
@@ -343,7 +337,7 @@
                                                             class="btn sbold red">{{substr_replace($l->net_balance,'.',-2,0)}}</a>
                                                         @endif
                                                     </div>
-                                                    <div style="font-size:10px; opacity:.7;"></div>
+                                                    <div style="opacity:.7;"></div>
                                                 </td>
                                             @endif
                                             </tr>
