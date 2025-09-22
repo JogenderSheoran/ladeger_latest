@@ -215,14 +215,18 @@
                                             @if($value->medicine_transaction==1)
                                                 {{ substr_replace($value->medicine_amount, '.', -2, 0) }}
                                                 
-                                                @if($value->date == $latestDate && !empty($value->net_amount) && !empty($value->bill_date))
-                                                <span class="corner-amount {{ ($value->net_amount ?? 0) < 0 ? 'text-danger' : 'text-success' }}">
-                                                    {{ $value->net_amount ?? '' }}
-                                                </span>
-                                                @endif
+                                             
                                             @endif
                                         </td>
-                                            <td class="text-effect"> @if($value->medicine_transaction==0) {{substr_replace($value->amount,'.',-2,0)}} @else {{substr_replace($value->medicine_new_amount,'.',-2,0)}}  @endif</td>
+                                            <td class="text-effect"> @if($value->medicine_transaction==0) {{substr_replace($value->amount,'.',-2,0)}} @else {{substr_replace($value->medicine_new_amount,'.',-2,0)}}  @endif
+
+                                            @if($value->date == $latestDate && !empty($value->net_amount) && !empty($value->bill_date))
+                                                <span class="corner-amount" 
+                                                    style="color: {{ ($value->net_amount ?? 0) < 0 ? '#FF0000' : '#006400' }};">
+                                                    {{ $value->net_amount ?? '' }}
+                                                </span>
+                                            @endif
+                                            </td>
                                             <td class="text-effect">{{$value->remark}} @if($value->remark1!='') ({{$value->remark1}}) @endif</td>
 
                                             <td class="text-effect"><input @if($value->transaction_status==1) checked @endif type="checkbox" id="t{{$value->id}}" class="form-control" style="height:15px;" onclick="change_status({{$value->id}})" ></td>

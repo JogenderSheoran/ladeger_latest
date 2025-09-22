@@ -797,6 +797,7 @@ $('#edit_journal_voucher').submit(function (e) {
     $('#mytable').DataTable({
         "processing": true,
         "serverSide": true,
+        "stateSave": true,
         "ajax": {
             "url": "{{ route('medicineTransactionsAjax') }}",
             "type": "POST",
