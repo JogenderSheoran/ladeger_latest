@@ -14,6 +14,14 @@
     .dropdown-menu {
         min-width: 193px;
     }
+    .table-responsive {
+        overflow-x: hidden !important;
+        min-height: .01% !important;
+    }
+
+    .portlet.light {
+        padding: 0 !important;
+    }
 </style>
 <style>
     .dataTables_filter {
