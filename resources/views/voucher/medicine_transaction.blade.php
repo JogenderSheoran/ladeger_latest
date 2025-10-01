@@ -150,7 +150,7 @@
                             </button>
 
                             <!-- Total Button -->
-                            <button id="totalBtn" class="btn" @if($total <= 0) style="background: #bd2130; color: white; font-weight: bold; border: 1px solid #721c24; box-shadow: 0 2px 8px rgba(189, 33, 48, 0.3); " @else style="background: #1e7e34; color: white; font-weight: bold; border: 1px solid #155724; box-shadow: 0 2px 8px rgba(30, 126, 52, 0.3); " @endif>
+                            <button id="totalBtn" class="btn" style="background: #dc3545; color: white; font-weight: bold; border: 1px solid #c82333; box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3); ">
                                 <i class="fa fa-calculator"></i> <strong>Total: {{ $total }}</strong>
                             </button>
                         </div><br>
@@ -797,7 +797,7 @@ $('#edit_journal_voucher').submit(function (e) {
     $('#mytable').DataTable({
         "processing": true,
         "serverSide": true,
-        "stateSave": true,
+        "stateSave": false,
         "ajax": {
             "url": "{{ route('medicineTransactionsAjax') }}",
             "type": "POST",
@@ -828,8 +828,8 @@ $('#edit_journal_voucher').submit(function (e) {
         "ordering": false,
         "searching": true,
         "paging": true,
-        "pageLength": 25,
-        "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
+        "pageLength": 50,
+        "lengthMenu": [[50], [50]],
         "info": true,
         "language": {
             "processing": "Loading medicine transactions...",
@@ -1112,12 +1112,8 @@ $('#edit_journal_voucher').submit(function (e) {
                     // Update Minus button
                     $('#minusBtn').html('<i class="fa fa-minus-circle"></i> <strong>Minus: - ' + response.total_minus + '</strong>');
                     
-                    // Update Total button with conditional styling
-                    var totalBtnStyle = response.total <= 0 
-                        ? 'background: linear-gradient(45deg,rgb(241, 6, 61) 0%,rgb(223, 42, 10) 100%); color: white; font-weight: bold; border: 1px solid #721c24; box-shadow: 0 2px 8px rgba(189, 33, 48, 0.3); border-radius: 15px; padding: 6px 15px; margin: 3px; transition: all 0.3s ease; font-size: 12px;'
-                        : 'background: linear-gradient(45deg,rgb(49, 143, 6) 0%,rgb(10, 121, 80) 100%); color: white; font-weight: bold; border: 1px solid #155724; box-shadow: 0 2px 8px rgba(30, 126, 52, 0.3); border-radius: 15px; padding: 6px 15px; margin: 3px; transition: all 0.3s ease; font-size: 12px;';
-                    
-                    $('#totalBtn').attr('style', totalBtnStyle).html('<i class="fa fa-calculator"></i> <strong>Total: ' + response.total + '</strong>');
+                    // Update Total button with consistent red styling
+                    $('#totalBtn').attr('style', 'background: #dc3545; color: white; font-weight: bold; border: 1px solid #c82333; box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);').html('<i class="fa fa-calculator"></i> <strong>Total: ' + response.total + '</strong>');
                     
                     console.log('Summary buttons updated successfully'); // Debug log
                 } else {

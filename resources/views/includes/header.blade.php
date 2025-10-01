@@ -54,20 +54,84 @@
     100% { transform: translateX(-100%); }
   }
 
-  .instruction-ticker-bar:hover .ticker-content {
-    animation-play-state: paused;
+  .page-header-menu {
+    background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    overflow: visible !important;
   }
 
-  /* ✅ Responsive adjustments */
-  @media (max-width: 992px) {
-    .page-header .page-header-top {
-      flex-direction: column;
-      align-items: flex-start;
+  .hor-menu {
+    margin: 0 !important;
+    padding: 0 !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .hor-menu ul.nav {
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .hor-menu ul.nav li {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .hor-menu ul.nav li a {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+    position: relative;
+  }
+
+  .hor-menu ul.nav li a:hover {
+    text-decoration: none;
+  }
+
+
+
+  .menu-dropdown.classic-menu-dropdown,
+  .menu-dropdown.mega-menu-dropdown {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .menu-dropdown.classic-menu-dropdown a,
+  .menu-dropdown.mega-menu-dropdown a {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 991px) {
+    .page-header .page-header-menu .hor-menu .navbar-nav {
+      background:#4861C2 !important;
+      color:white !important;
     }
-    .top-menu {
-      width: 100%;
-      justify-content: flex-start;
-      margin-top: 10px;
+    .page-header .page-header-menu .hor-menu .navbar-nav > li > a {
+      background: 0 0 !important;
+      color: white !important;
+    }
+    .page-header .page-header-menu .hor-menu .navbar-nav > li {
+      border: none !important;
     }
     .instruction-ticker-bar {
       font-size: 12px;
@@ -82,6 +146,10 @@
     }
     .top-menu ul.nav li {
       margin: 5px 0;
+    }
+    .instruction-ticker-bar {
+      font-size: 11px;
+      padding: 4px 0;
     }
   }
 </style>
