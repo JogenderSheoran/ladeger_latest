@@ -227,8 +227,8 @@
                                             @endif
                                         </td>
                                             <td class="text-effect"> @if($value->medicine_transaction==0) {{substr_replace($value->amount,'.',-2,0)}} @else {{substr_replace($value->medicine_new_amount,'.',-2,0)}}  @endif
-
-                                            @if($value->date == $latestDate && !empty($value->net_amount) && !empty($value->bill_date))
+                                           
+                                            @if(!empty($value->net_amount) && !empty($value->bill_date))
                                                 <span class="corner-amount" 
                                                     style="color: {{ ($value->net_amount ?? 0) < 0 ? '#FF0000' : '#006400' }};">
                                                     {{ $value->net_amount ?? '' }}
