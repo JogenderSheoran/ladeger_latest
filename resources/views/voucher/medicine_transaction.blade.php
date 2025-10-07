@@ -150,7 +150,7 @@
                             </button>
 
                             <!-- Total Button -->
-                            <button id="totalBtn" class="btn" style="background: #dc3545; color: white; font-weight: bold; border: 1px solid #c82333; box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3); ">
+                            <button id="totalBtn" class="btn" style="@if($total >= 0) background: #28a745; border: 1px solid #1e7e34; box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3); @else background: #dc3545; border: 1px solid #c82333; box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3); @endif color: white; font-weight: bold;">
                                 <i class="fa fa-calculator"></i> <strong>Total: {{ $total }}</strong>
                             </button>
                         </div><br>
@@ -662,26 +662,7 @@
             cache: false,
             success: function (data) {
                 if (data.type == 1 || data.status == true) {
-                    $("#medicine_name").focus();
-                    // Instead of full page reload, just refresh DataTable and summary
-                    $('#mytable').DataTable().ajax.reload(null, false); // false = keep current page
-                    
-                    // Add a small delay to ensure the transaction is saved before fetching totals
-                    setTimeout(function() {
-                        console.log('Calling refreshSummaryTotals after transaction...');
-                        refreshSummaryTotals(); // Update the summary buttons
-                    }, 500);
-                    
-                    toastr.success(data.message, 'success');
-                    
-                    // Clear the form for next entry
-                    $('#add_journal_voucher')[0].reset();
-                    $("#party_balance").val('');
-                    $("#medicine_name").val('');
-                    $("#amount").val('');
-                    $("#rate").val('');
-                    $("#rebate").val('');
-                    $("#remark").val('');
+                    window.location.reload();
                 } else {
                     toastr.error(data.message, 'Error');
                     $("#party_balance").val('');
@@ -697,6 +678,7 @@
 
                 // Move focus to the medicine name input field
                 $('#party_balance').focus();
+                window.location.reload();
             },
             error: function() {
                 isSubmitting = false;
@@ -1112,8 +1094,14 @@ $('#edit_journal_voucher').submit(function (e) {
                     // Update Minus button
                     $('#minusBtn').html('<i class="fa fa-minus-circle"></i> <strong>Minus: - ' + response.total_minus + '</strong>');
                     
-                    // Update Total button with consistent red styling
-                    $('#totalBtn').attr('style', 'background: #dc3545; color: white; font-weight: bold; border: 1px solid #c82333; box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);').html('<i class="fa fa-calculator"></i> <strong>Total: ' + response.total + '</strong>');
+                    // Update Total button with dynamic styling based on value
+                    var totalStyle = '';
+                    if (response.total >= 0) {
+                        totalStyle = 'background: #28a745; border: 1px solid #1e7e34; box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3); color: white; font-weight: bold;';
+                    } else {
+                        totalStyle = 'background: #dc3545; border: 1px solid #c82333; box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3); color: white; font-weight: bold;';
+                    }
+                    $('#totalBtn').attr('style', totalStyle).html('<i class="fa fa-calculator"></i> <strong>Total: ' + response.total + '</strong>');
                     
                     console.log('Summary buttons updated successfully'); // Debug log
                 } else {
