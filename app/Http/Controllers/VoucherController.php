@@ -29,9 +29,19 @@ class VoucherController extends Controller
         $data=JournalVoucher::where('archieve_status',1)->where('status',1)->orderBy('id','DESC')->where('admin_id',Auth::user()->id)->limit(100)->get();
         
         
-        foreach($data as $d){
-            $d->party1=ledger::where('id',$d->party1)->value('name');
-            $d->party2=ledger::where('id',$d->party2)->value('name');
+      foreach ($data as $key => $d) {
+
+            $ledgerCheck = ledger::where('id', $d->ledger_id)
+                ->select('id', 'status', 'archieve_status')
+                ->first();
+
+            if (!$ledgerCheck || $ledgerCheck->status != 1) {
+                unset($data[$key]);
+                continue;
+            }
+
+            $d->party1 = ledger::where('id', $d->party1)->value('name');
+            $d->party2 = ledger::where('id', $d->party2)->value('name');
         }
         return View::make('voucher.journal_voucher',compact('title','data','ledger'));
     }
@@ -63,31 +73,67 @@ class VoucherController extends Controller
     //     return View::make('voucher.medicine_transaction',compact('title','data','medicine'));
     // }
 
+    // public function medicine_transaction()
+    // {
+    //     $title = 'Medicine Transaction';
+    //     $medicine = Medicine::where('admin_id', Auth::user()->id)->get();
+
+    //     $today = Carbon::today();
+    //     $startDate = $today->copy()->subDays(2)->toDateString(); 
+    //     $endDate   = $today->toDateString(); 
+
+    //     // Get total plus transactions for last 3 days
+    //     $total_plus = MedicineTransaction::where('admin_id', Auth::user()->id)
+    //         ->whereBetween('date', [$startDate, $endDate])
+    //         ->where('type', 'plus')
+    //         ->sum('medicine_amount');
+
+    //     // Get total minus transactions for last 3 days
+    //     $total_minus = MedicineTransaction::where('admin_id', Auth::user()->id)
+    //         ->whereBetween('date', [$startDate, $endDate])
+    //         ->where('type', 'minus')
+    //         ->sum('medicine_amount');
+
+    //     $total = $total_plus - $total_minus;
+
+    //     return View::make('voucher.medicine_transaction', compact('title','medicine','total_plus','total_minus','total'));
+    // }
+
     public function medicine_transaction()
     {
         $title = 'Medicine Transaction';
-        $medicine = Medicine::where('admin_id', Auth::user()->id)->get();
+        $medicine = Medicine::where('admin_id', Auth::user()->id)->whereHas('ledger', function ($q) {
+            $q->where('status', 1);
+        })->get();
 
         $today = Carbon::today();
-        $startDate = $today->copy()->subDays(2)->toDateString(); // परसों
-        $endDate   = $today->toDateString(); // आज
+        $startDate = $today->copy()->subDays(2)->toDateString(); 
+        $endDate   = $today->toDateString(); 
 
-        // Get total plus transactions for last 3 days
         $total_plus = MedicineTransaction::where('admin_id', Auth::user()->id)
             ->whereBetween('date', [$startDate, $endDate])
             ->where('type', 'plus')
+            ->whereHas('ledger', function ($q) {
+                $q->where('status', 1);
+            })
             ->sum('medicine_amount');
 
-        // Get total minus transactions for last 3 days
         $total_minus = MedicineTransaction::where('admin_id', Auth::user()->id)
             ->whereBetween('date', [$startDate, $endDate])
             ->where('type', 'minus')
+            ->whereHas('ledger', function ($q) {
+                $q->where('status', 1);
+            })
             ->sum('medicine_amount');
 
         $total = $total_plus - $total_minus;
 
-        return View::make('voucher.medicine_transaction', compact('title','medicine','total_plus','total_minus','total'));
+        return View::make(
+            'voucher.medicine_transaction',
+            compact('title', 'medicine', 'total_plus', 'total_minus', 'total')
+        );
     }
+
 
     
 
@@ -293,6 +339,7 @@ class VoucherController extends Controller
 
     public function ledgerMedicine(Request $request)
     {
+       
         $isAdmin = Auth::user()->is_admin == 'Admin';
         $query = MedicineTransaction::where('bill_status',0)->orderBy('id', 'DESC')
             ->where('ledger_id', $request->ledger_id);
@@ -303,33 +350,33 @@ class VoucherController extends Controller
         $data = $query->get();
    
 
-    $totalPlus = 0;
-    $totalMinus = 0;
+        $totalPlus = 0;
+        $totalMinus = 0;
 
-    foreach ($data as $d) {
-        $medicine = Medicine::withTrashed()->where('id', $d->medicine_id)->first();
-        // dd($medicine);
-        if($medicine!=''){
-            $d->medicine_name = $medicine->medicine_name;
-        }
-        else{
-            $d->medicine_name = 'N/A';
-        }
-        
-        $d->medicine_amount = (int)$d->medicine_amount;
-        $d->rate = $medicine->medicine_rate;
-        $d->rebate = $medicine->medicine_rebate;
-        $d->ledger_name = Ledger::where('id', $d->ledger_id)->value('name');
-        
-        // Format the date for display
-        $d->formatted_date = $d->created_at ? $d->created_at->format('d/m/Y') : '';
-    
-            if ($d->type == 'plus') {
-                $totalPlus += $d->medicine_amount;
-            } elseif ($d->type == 'minus') {
-                $totalMinus += $d->medicine_amount;
+        foreach ($data as $d) {
+            $medicine = Medicine::withTrashed()->where('id', $d->medicine_id)->first();
+            // dd($medicine);
+            if($medicine!=''){
+                $d->medicine_name = $medicine->medicine_name;
             }
-        }
+            else{
+                $d->medicine_name = 'N/A';
+            }
+            
+            $d->medicine_amount = (int)$d->medicine_amount;
+            $d->rate = $medicine->medicine_rate;
+            $d->rebate = $medicine->medicine_rebate;
+            $d->ledger_name = Ledger::where('id', $d->ledger_id)->value('name');
+            
+            // Format the date for display
+            $d->formatted_date = $d->created_at ? $d->created_at->format('d/m/Y') : '';
+        
+                if ($d->type == 'plus') {
+                    $totalPlus += $d->medicine_amount;
+                } elseif ($d->type == 'minus') {
+                    $totalMinus += $d->medicine_amount;
+                }
+            }
 
         $totals = [
             'totalPlus' => $totalPlus,
@@ -467,6 +514,142 @@ class VoucherController extends Controller
 
     }
 
+    // public function getMedicineTransactionsAjax(Request $request)
+    // {
+    //     $draw = $request->get('draw');
+    //     $start = $request->get('start');
+    //     $length = $request->get('length');
+    //     $search = $request->get('search')['value'];
+
+    //     // Base query
+    //     $query = MedicineTransaction::orderBy('id', 'DESC')
+    //         ->where('admin_id', Auth::user()->id);
+
+    //     // Apply search if provided
+    //     if (!empty($search)) {
+    //         $query->where(function($q) use ($search) {
+    //             $q->where('remark', 'like', "%{$search}%")
+    //             ->orWhere('type', 'like', "%{$search}%");
+    //         });
+    //     }
+
+    //     // Get total records count
+    //     $totalRecords = MedicineTransaction::where('admin_id', Auth::user()->id)->count();
+    //     $filteredRecords = $query->count();
+
+    //     // Apply pagination
+    //     $data = $query->skip($start)->take($length)->get();
+
+    //     // Process data for display
+    //     $result = [];
+    //     foreach ($data as $key => $value) {
+    //         $medicine = Medicine::withTrashed()->where('id', $value->medicine_id)->first();
+    //         $ledger_name = ledger::where('id', $value->ledger_id)->value('name');
+            
+    //         $medicine_name = $medicine ? $medicine->medicine_name : 'N/A';
+    //         $rate = $medicine ? $medicine->medicine_rate : 0;
+    //         $rebate = $medicine ? $medicine->medicine_rebate : 0;
+
+    //         $typeLabel = $value->type == 'minus' 
+    //             ? '<span class="label label-sm label-danger label-mini btn cr_dr  sbold" style="background-color:red">
+    //                                                 lene
+    //                                             </span>'
+    //             : '<span class="label label-sm label-success label-mini btn cr_dr  sbold" style="background-color:green">
+    //                                                 dene
+    //                                             </span>';
+
+    //         // // Bill status with proper colored buttons
+    //         // $billLabel = $value->bill_status == 0 
+    //         //     ? '<span class="btn btn-xs btn-danger" style="background-color: #dc3545; color: white; border: none; font-size: 10px; padding: 2px 6px;">
+    //         //         <i class="fa fa-clock-o"></i> PENDING
+    //         //        </span>'
+    //         //     : '<span class="btn btn-xs btn-success" style="background-color: #28a745; color: white; border: none; font-size: 10px; padding: 2px 6px;">
+    //         //         <i class="fa fa-check-circle"></i> GENERATED
+    //         //        </span>';
+
+    //         $style="";
+    //         if($value->bill_status==0){
+    //             $style="background-color:red";
+    //         }
+    //         else{
+    //             $style="background-color:green";
+    //         }
+
+    //         $val = "";
+    //         if($value->bill_status==0){
+    //             $val="Generate Bill";
+    //         }
+    //         else{
+    //             $val="Bill Generated";
+    //         }
+            
+    //         $billLabel='<span class="label label-sm label-success label-mini btn cr_dr  sbold" style="'.$style.'">
+    //               '.$val.'
+    //            </span>';
+
+    //         // Check if transaction is deleted
+    //         $isDeleted = isset($value->is_deleted) && $value->is_deleted == 1;
+            
+    //         // Show amounts as 0 if deleted, otherwise show actual amounts
+    //         $amount = $isDeleted ? '0' : (($value->type == 'minus' ? '- ' : '+ ') . $value->medicine_amount);
+    //         $medicineAmount = $isDeleted ? '0' : (($value->type == 'minus' ? '- ' : '+ ') . $value->amount);
+
+    //         $actionButton = '<div style="display: grid; gap:2px; justify-content: center; align-items: center;">
+    //         <a href="javascript:void(0)" onclick="showTransactionDetails(' . $value->ledger_id . ')" class="btn btn-sm" title="View Details">
+    //             <i class="fa fa-eye" style="font-size: 12px;"></i>
+    //         </a>';
+        
+    //     // Add delete button only if not already deleted AND bill is not generated
+    //     if (!$isDeleted && $value->bill_status == 0) {
+    //         $actionButton .= '<a href="javascript:void(0)" onclick="deleteTransaction(' . $value->id . ')" class="btn btn-sm" title="Delete Transaction">
+    //             <i class="fa fa-times" style="font-size: 12px; color: #e74c3c;"></i>
+    //         </a>';
+    //     } elseif ($value->bill_status == 1) {
+    //         // Show green tick if bill is generated
+    //         $actionButton .= '';
+    //     } elseif ($isDeleted) {
+    //         // Show "DELETED" status if deleted
+    //         $actionButton .= '<span class="btn btn-sm" title="Transaction Deleted">
+    //             <i class="fa fa-ban" style="font-size: 10px; color: #95a5a6;"></i>
+    //         </span>';
+    //     }
+            
+    //     $actionButton .= '</div>';
+
+    //     // Set row style - deleted transactions get gray background, others keep original logic
+    //     $rowStyle = '';
+    //     if ($isDeleted) {
+    //         $rowStyle = 'background-color: #f8f9fa; opacity: 0.7; text-decoration: line-through;';
+    //     } elseif ($value->transaction_status == 1) {
+    //         $rowStyle = 'background-color:rgb(150 221 150)';
+    //     }
+
+    //         $result[] = [
+    //             'id' => $value->id,
+    //             'sr_no' => $start + $key + 1,
+    //             'date' => date('d-m-Y', strtotime($value->date)),
+    //             'medicine_name' => $medicine_name,
+    //             'ledger_name' => $ledger_name,
+    //             'type' => $typeLabel,
+    //             'amount' => $amount,
+    //             'medicine_amount' => $medicineAmount,
+    //             'rate' => $rate,
+    //             'rebate' => $rebate,
+    //             'remark' => $value->remark,
+    //             'bill' => $billLabel,
+    //             'action' => $actionButton,
+    //             'row_style' => $rowStyle
+    //         ];
+    //     }
+
+    //     return response()->json([
+    //         'draw' => intval($draw),
+    //         'recordsTotal' => $totalRecords,
+    //         'recordsFiltered' => $filteredRecords,
+    //         'data' => $result
+    //     ]);
+    // }
+
     public function getMedicineTransactionsAjax(Request $request)
     {
         $draw = $request->get('draw');
@@ -474,108 +657,81 @@ class VoucherController extends Controller
         $length = $request->get('length');
         $search = $request->get('search')['value'];
 
-        // Base query
         $query = MedicineTransaction::orderBy('id', 'DESC')
             ->where('admin_id', Auth::user()->id);
 
-        // Apply search if provided
         if (!empty($search)) {
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('remark', 'like', "%{$search}%")
                 ->orWhere('type', 'like', "%{$search}%");
             });
         }
 
-        // Get total records count
         $totalRecords = MedicineTransaction::where('admin_id', Auth::user()->id)->count();
         $filteredRecords = $query->count();
 
-        // Apply pagination
         $data = $query->skip($start)->take($length)->get();
 
-        // Process data for display
         $result = [];
+
         foreach ($data as $key => $value) {
+
             $medicine = Medicine::withTrashed()->where('id', $value->medicine_id)->first();
-            $ledger_name = ledger::where('id', $value->ledger_id)->value('name');
-            
-            $medicine_name = $medicine ? $medicine->medicine_name : 'N/A';
-            $rate = $medicine ? $medicine->medicine_rate : 0;
-            $rebate = $medicine ? $medicine->medicine_rebate : 0;
 
-            $typeLabel = $value->type == 'minus' 
-                ? '<span class="label label-sm label-danger label-mini btn cr_dr  sbold" style="background-color:red">
-                                                    lene
-                                                </span>'
-                : '<span class="label label-sm label-success label-mini btn cr_dr  sbold" style="background-color:green">
-                                                    dene
-                                                </span>';
-
-            // // Bill status with proper colored buttons
-            // $billLabel = $value->bill_status == 0 
-            //     ? '<span class="btn btn-xs btn-danger" style="background-color: #dc3545; color: white; border: none; font-size: 10px; padding: 2px 6px;">
-            //         <i class="fa fa-clock-o"></i> PENDING
-            //        </span>'
-            //     : '<span class="btn btn-xs btn-success" style="background-color: #28a745; color: white; border: none; font-size: 10px; padding: 2px 6px;">
-            //         <i class="fa fa-check-circle"></i> GENERATED
-            //        </span>';
-
-            $style="";
-            if($value->bill_status==0){
-                $style="background-color:red";
-            }
-            else{
-                $style="background-color:green";
+            if (!$medicine) {
+                continue;
             }
 
-            $val = "";
-            if($value->bill_status==0){
-                $val="Generate Bill";
-            }
-            else{
-                $val="Bill Generated";
-            }
-            
-            $billLabel='<span class="label label-sm label-success label-mini btn cr_dr  sbold" style="'.$style.'">
-                  '.$val.'
-               </span>';
+            $ledger = ledger::where('id', $value->ledger_id)
+                ->where('status', 1)
+                ->first();
 
-            // Check if transaction is deleted
+            if (!$ledger) {
+                continue;
+            }
+
+            $medicine_name = $medicine->medicine_name;
+            $rate = $medicine->medicine_rate;
+            $rebate = $medicine->medicine_rebate;
+            $ledger_name = $ledger->name;
+
+            $typeLabel = $value->type == 'minus'
+                ? '<span class="label label-sm label-danger label-mini btn cr_dr sbold" style="background-color:red">lene</span>'
+                : '<span class="label label-sm label-success label-mini btn cr_dr sbold" style="background-color:green">dene</span>';
+
+            $style = $value->bill_status == 0 ? 'background-color:red' : 'background-color:green';
+            $val = $value->bill_status == 0 ? 'Generate Bill' : 'Bill Generated';
+
+            $billLabel = '<span class="label label-sm label-success label-mini btn cr_dr sbold" style="'.$style.'">'.$val.'</span>';
+
             $isDeleted = isset($value->is_deleted) && $value->is_deleted == 1;
-            
-            // Show amounts as 0 if deleted, otherwise show actual amounts
+
             $amount = $isDeleted ? '0' : (($value->type == 'minus' ? '- ' : '+ ') . $value->medicine_amount);
             $medicineAmount = $isDeleted ? '0' : (($value->type == 'minus' ? '- ' : '+ ') . $value->amount);
 
-            $actionButton = '<div style="display: grid; gap:2px; justify-content: center; align-items: center;">
-            <a href="javascript:void(0)" onclick="showTransactionDetails(' . $value->ledger_id . ')" class="btn btn-sm" title="View Details">
-                <i class="fa fa-eye" style="font-size: 12px;"></i>
-            </a>';
-        
-        // Add delete button only if not already deleted AND bill is not generated
-        if (!$isDeleted && $value->bill_status == 0) {
-            $actionButton .= '<a href="javascript:void(0)" onclick="deleteTransaction(' . $value->id . ')" class="btn btn-sm" title="Delete Transaction">
-                <i class="fa fa-times" style="font-size: 12px; color: #e74c3c;"></i>
-            </a>';
-        } elseif ($value->bill_status == 1) {
-            // Show green tick if bill is generated
-            $actionButton .= '';
-        } elseif ($isDeleted) {
-            // Show "DELETED" status if deleted
-            $actionButton .= '<span class="btn btn-sm" title="Transaction Deleted">
-                <i class="fa fa-ban" style="font-size: 10px; color: #95a5a6;"></i>
-            </span>';
-        }
-            
-        $actionButton .= '</div>';
+            $actionButton = '<div style="display:grid;gap:2px;justify-content:center;align-items:center;">
+                <a href="javascript:void(0)" onclick="showTransactionDetails('.$value->ledger_id.')" class="btn btn-sm">
+                    <i class="fa fa-eye" style="font-size:12px;"></i>
+                </a>';
 
-        // Set row style - deleted transactions get gray background, others keep original logic
-        $rowStyle = '';
-        if ($isDeleted) {
-            $rowStyle = 'background-color: #f8f9fa; opacity: 0.7; text-decoration: line-through;';
-        } elseif ($value->transaction_status == 1) {
-            $rowStyle = 'background-color:rgb(150 221 150)';
-        }
+            if (!$isDeleted && $value->bill_status == 0) {
+                $actionButton .= '<a href="javascript:void(0)" onclick="deleteTransaction('.$value->id.')" class="btn btn-sm">
+                    <i class="fa fa-times" style="font-size:12px;color:#e74c3c;"></i>
+                </a>';
+            } elseif ($isDeleted) {
+                $actionButton .= '<span class="btn btn-sm">
+                    <i class="fa fa-ban" style="font-size:10px;color:#95a5a6;"></i>
+                </span>';
+            }
+
+            $actionButton .= '</div>';
+
+            $rowStyle = '';
+            if ($isDeleted) {
+                $rowStyle = 'background-color:#f8f9fa;opacity:0.7;text-decoration:line-through;';
+            } elseif ($value->transaction_status == 1) {
+                $rowStyle = 'background-color:rgb(150 221 150)';
+            }
 
             $result[] = [
                 'id' => $value->id,
@@ -602,6 +758,7 @@ class VoucherController extends Controller
             'data' => $result
         ]);
     }
+
 
     public function deleteTransaction(Request $request)
     {

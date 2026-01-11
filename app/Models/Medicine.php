@@ -16,5 +16,10 @@ class Medicine extends Model
     {
         return ucfirst($value); 
     }
+
+    public function ledger()
+    {
+        return $this->belongsTo(ledger::class);
+    }
 }
 

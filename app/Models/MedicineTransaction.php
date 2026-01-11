@@ -10,4 +10,9 @@ class MedicineTransaction extends Model
     use HasFactory;
 
     protected $table='medicines_transaction';
+
+    public function ledger()
+    {
+        return $this->belongsTo(ledger::class, 'ledger_id');
+    }
 }
