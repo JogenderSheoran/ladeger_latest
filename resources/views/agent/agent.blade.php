@@ -4,6 +4,7 @@
     .dataTables_filter{
         display:none;
     }
+    
 </style>
     <div class="page-content-wrapper">
         <!-- BEGIN CONTENT BODY -->
